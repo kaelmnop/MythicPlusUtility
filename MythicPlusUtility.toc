@@ -1,10 +1,11 @@
 ## Interface: 120001
-## Version: 1.0.0
+## Version: @project-version@
 ## Title: Mythic Plus Utility
 ## Notes: Shows which utility abilities you should take and where to use them in Mythic+ dungeon
 ## Notes-ruRU: Показывает какие утилити способности стоит взять и где их использовать в Мифик+
 ## Author: Nikyou
 ## SavedVariables: MythicPlusUtilityDB
+## X-Curse-Project-ID: 1475054
 
 
 # Libraries
