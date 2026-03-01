@@ -1,3 +1,5 @@
 package-as: MythicPlusUtility
+enable-nolib-creation: no
+
 ignore:
   - README.md
