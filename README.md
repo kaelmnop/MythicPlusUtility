@@ -14,6 +14,14 @@ https://www.curseforge.com/wow/addons/mythic-plus-utility-mpu
   * *no indication* - moderate impact, taking and using this ability is recommended
   * ? - low impact, taking and using this ability for this alone is not worth it in most cases
 
+## Not included
+* Racial abilities (might be added later)
+* Magical debuffs on friendly players and abilities that remove them - they are healer specific mechanic with some exceptions
+* Interrupt abilities and important casts that are interrupt-only - out of the scope for this project
+* Shadowmeld, vanish, feign death and other abilities that are used to dodge a targeted ability (might be added later)
+* Invisibility, shroud, etc. - they are route-specific
+* Niche class-specific abilities like spell reflect - out of the scope for this project
+
 ## To Do
 * Profiles
 * An option to disable specific spells from showing in the frame
