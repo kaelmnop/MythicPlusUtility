@@ -63,6 +63,11 @@ MythicPlusUtility.instancesData = {
         }, { -- Power Word: Shield
             text = format(L["{spell:%d} buff is cast by {npc:%d}."], 1254306, 234486),
             tags = "[important][purge]",
+        }, { -- Terror Wave
+            text = format(
+              L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d}). Also, this cast can be LoS."],
+              1264693, 231552, 231864), -- First NpcId is wrong but has the same name 
+            tags = "[important][fear]",
         },
     },
     [2874] = { -- Maisara Caverns

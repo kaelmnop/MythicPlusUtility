@@ -17,7 +17,8 @@ L["Body Text Size"] = "Размер текста"
 L["Background Opacity"] = "Прозрачность фона"
 L["Hide on Mythic+ start"] = "Скрыть при начале Эпохальный+"
 L["Hide not Important"] = "Скрыть неважные"
-L["Hides dungeon entries that are marked with %s"] = "Скрывает записи в подземельях, помеченные %s"
+L["Hides dungeon entries that are marked with %s"] =
+  "Скрывает записи в подземельях, помеченные %s"
 L["Dungeon Preview"] = "Просмотр подземелья"
 L["Show in"] = "Показывать в"
 L["Normal"] = "Обычный"
@@ -83,7 +84,7 @@ L["Prevent {npc:%d} from reaching players or other {npc:%d} on the second boss {
   "Мешает {npc:%d} достичь игроков или других {npc:%d} на последнем боссе {npc:%d}."
 L["Prevent {npc:%d} from reaching the first boss {npc:%d}."] =
   "Мешает {npc:%d} достичь первого босса {npc:%d}."
-L["Slow {npc:%d} on the third boss {npc:%d}."] =
-  "Замедляет {npc:%d} на третьем боссе {npc:%d}."
-L["Stun {npc:%d} on the last boss {npc:%d}."] =
-  "Оглушает {npc:%d} на последнем боссе {npc:%d}."
+L["Slow {npc:%d} on the third boss {npc:%d}."] = "Замедляет {npc:%d} на третьем боссе {npc:%d}."
+L["Stun {npc:%d} on the last boss {npc:%d}."] = "Оглушает {npc:%d} на последнем боссе {npc:%d}."
+L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d}). Also, this cast can be LoS."] =
+  "{spell:%d} дебафф, который накладывает {npc:%d} (треш перед {npc:%d}). Также, от этого заклинание можно укрытся."
