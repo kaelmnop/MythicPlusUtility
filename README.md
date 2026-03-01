@@ -10,9 +10,9 @@ https://www.curseforge.com/wow/addons/mythic-plus-utility-mpu
 * Unlearned abilities are desaturated
 * Abilities that are used only on yourself have a special symbol near their name
 * Entries where to use an ability have an importance distinction:
- * **!** - strong impact, a must-have pick in most cases
- * *no indication* - moderate impact, taking and using this ability is recommended
- * ? - low impact, taking and using this ability for this alone is not worth it in most cases
+  * **!** - strong impact, a must-have pick in most cases
+  * *no indication* - moderate impact, taking and using this ability is recommended
+  * ? - low impact, taking and using this ability for this alone is not worth it in most cases
 
 ## To Do
 * Profiles
