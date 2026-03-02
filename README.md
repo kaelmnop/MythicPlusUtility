@@ -34,4 +34,4 @@ I will be glad if you could help with the addon localisation through the Cursefo
 ## Issues & Feedback
 Found a bug or have a suggestion? Reach out on Discord!
 
-💬 Discord: Nikyou ☕ Support: buymeacoffee.com/nikyou
+💬 Discord: Nikyou ☕ Support: [buymeacoffee.com/nikyou](https://buymeacoffee.com/nikyou)
