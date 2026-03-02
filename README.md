@@ -7,6 +7,7 @@ https://www.curseforge.com/wow/addons/mythic-plus-utility-mpu
 ## Usage
 * `/mpu` - opens addon settings out of combat
 * `/mpu show` - opens utility frame for selected dungeon in settings
+* `/mpu minimap` - toggles Minimap Button
 
 ## Key Features
 * Customisable Frame with utility abilities for a dungeon
