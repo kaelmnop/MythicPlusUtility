@@ -2,11 +2,11 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MythicPlusUtility", "ruRU")
 if not L then return end
 
 -- Options
-L["Toggle Frame"] = "Переключение окна"
-L["Frame Position and Size Settings"] = "Размер и положение окна"
+L["Toggle Window"] = "Переключение окна"
+L["Window Position and Size Settings"] = "Размер и положение окна"
 L["Width"] = "Ширина"
 L["Height"] = "Высота"
-L["Lock Frame"] = "Отключить перемещение окна"
+L["Lock Window"] = "Отключить перемещение окна"
 L["Anchor to Screen's"] = "Закрепить за экран"
 L["X Offset"] = "Смещение по X"
 L["Y Offset"] = "Смещение по Y"
@@ -24,6 +24,10 @@ L["Show in"] = "Показывать в"
 L["Normal"] = "Обычный"
 L["Heroic"] = "Героический"
 L["Mythic"] = "Эпохальный"
+
+L["Show/Hide Utility Window"] = "Показать/Скрыть окно"
+L["Open Settings"] = "Открыть настройки"
+L["Disable Minimap Button"] = "Отключить кнопку миникарты"
 
 -- Dungeons
 L["Algeth\'ar Academy"] = "Академия Алгет\'ар"
@@ -88,3 +92,9 @@ L["Slow {npc:%d} on the third boss {npc:%d}."] = "Замедляет {npc:%d} н
 L["Stun {npc:%d} on the last boss {npc:%d}."] = "Оглушает {npc:%d} на последнем боссе {npc:%d}."
 L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d}). Also, this cast can be LoS."] =
   "{spell:%d} дебафф, который накладывает {npc:%d} (треш перед {npc:%d}). Также, от этого заклинание можно укрытся."
+L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d}). Also, this cast can be interrupted and LoS."] =
+  "{spell:%d} дебафф, который накладывает {npc:%d} (треш перед {npc:%d}). Также, это заклинание можно прервать и укрытся от него."
+L["{spell:%d} debuff is inflicted by {npc:%d}. Also, this debuff can be avoided."] =
+  "{spell:%d} дебафф, который накладывает {npc:%d}. Также, этот дебафф можно избежать."
+L["{spell:%d} debuff is inflicted by the third boss {npc:%d}. Also, this debuff can be avoided."] =
+  "{spell:%d} дебафф, который накладывает второй босс {npc:%d}. Также, этот дебафф можно избежать."

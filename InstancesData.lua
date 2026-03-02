@@ -65,7 +65,7 @@ MythicPlusUtility.instancesData = {
             tags = "[important][purge]",
         }, { -- Terror Wave
             text = format(
-              L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d}). Also, this cast can be LoS."],
+              L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d}). Also, this cast can be interrupted and LoS."],
               1264693, 231552, 231864), -- First NpcId is wrong but has the same name 
             tags = "[important][fear]",
         },
@@ -132,6 +132,10 @@ MythicPlusUtility.instancesData = {
         }, { -- Creeping Void
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1281636, 248706),
             tags = "[curse]",
+        }, { -- Dusk Frights
+            text = format(L["{spell:%d} debuff is inflicted by {npc:%d}. Also, this debuff can be avoided."], 1282724,
+                          251853),
+            tags = "[fear]",
         }, { -- Fixate
             text = format(L["{spell:%d} is cast by {npc:%d}."], 1263775, 254932),
             tags = "[creature_stun][creature_fear][creature_incapacitate]",
@@ -245,6 +249,11 @@ MythicPlusUtility.instancesData = {
         { -- Curse of Darkness
             text = format(L["{spell:%d} debuff is inflicted by the second boss {npc:%d}."], 1215803, 231626),
             tags = "[super_important][curse]",
+        }, { -- Intimidating Shout
+            text = format(
+              L["{spell:%d} debuff is inflicted by the third boss {npc:%d}. Also, this debuff can be avoided."],
+              1253030, 231631),
+            tags = "[fear]",
         }, -- Trash
         { -- Emphemeral Bloodlust
             text = format(L["{spell:%d} buff is cast by {npc:%d}."], 1216459, 232146),

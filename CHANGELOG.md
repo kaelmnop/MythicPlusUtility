@@ -1,2 +1,3 @@
-## 1.0.1
-* Added Terror Wave in Magisters' Terrace
+## @project-version@
+* Added Dusk Frights in Nexus-Point Xenas
+* Added Intimidating Shout in Windrunner Spire

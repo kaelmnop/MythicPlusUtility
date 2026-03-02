@@ -18,6 +18,8 @@ function MythicPlusUtility:OnInitialize()
 
     self:RegisterChatCommand("mpu", "SlashCommand")
 
+    self:InitializeMinimapIcon()
+
     self:GetCharacterInfo()
 
     self:ExtractSpellsFromDB()
@@ -147,24 +149,31 @@ function MythicPlusUtility:GetCharacterInfo()
 end
 
 function MythicPlusUtility:ToggleAbilitiesFrame()
-    if not MythicPlusUtility.Frame then
-        MythicPlusUtility.Frame = MythicPlusUtility:UtilityAbilitiesFrame()
-        MythicPlusUtility.Frame:SetShownHandler(true)
+    if not self.Frame then
+        self.Frame = self:UtilityAbilitiesFrame()
+        self.Frame:SetShownHandler(true)
 
         return
     end
-    MythicPlusUtility.Frame:SetShownHandler(not MythicPlusUtility.Frame:IsVisible())
+    self.Frame:SetShownHandler(not self.Frame:IsVisible())
 end
 
-function MythicPlusUtility:SlashCommand(input, editbox)
-    local inCombat = UnitAffectingCombat("player")
-    if input == "show" then
-        MythicPlusUtility:ToggleAbilitiesFrame()
-    elseif not inCombat then
+function MythicPlusUtility:OpenSettings(inCombat)
+    if not inCombat then
         if ACD.OpenFrames["MythicPlusUtility_Options"] then
             ACD:Close("MythicPlusUtility_Options")
         else
             ACD:Open("MythicPlusUtility_Options")
         end
+    end
+end
+
+function MythicPlusUtility:SlashCommand(input, editbox)
+    if input == "show" then
+        self:ToggleAbilitiesFrame()
+    elseif input == "minimap" then
+        self:ToggleMinimapIcon()
+    else
+        self:OpenSettings(UnitAffectingCombat("player"))
     end
 end
