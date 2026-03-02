@@ -1,7 +1,9 @@
 ## Download link
+
 https://www.curseforge.com/wow/addons/mythic-plus-utility-mpu
 
 ## Introduction
+
 **Mythic Plus Utility** is designed to help new and experienced players in Mythic+ dungeons by showing which utility ability they should take and where to use it.
 
 ## Usage
