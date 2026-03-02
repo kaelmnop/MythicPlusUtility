@@ -64,3 +64,7 @@ L["Prevent {npc:%d} from reaching the first boss {npc:%d}."] = true
 L["Slow {npc:%d} on the third boss {npc:%d}."] = true
 L["Stun {npc:%d} on the last boss {npc:%d}."] = true
 L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d}). Also, this cast can be LoS."] = true
+L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d}). Also, this cast can be interrupted and LoS."] =
+  true
+L["{spell:%d} debuff is inflicted by {npc:%d}. Also, this debuff can be avoided."] = true
+L["{spell:%d} debuff is inflicted by the third boss {npc:%d}. Also, this debuff can be avoided."] = true
