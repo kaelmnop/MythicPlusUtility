@@ -4,6 +4,10 @@ https://www.curseforge.com/wow/addons/mythic-plus-utility-mpu
 ## Introduction
 **Mythic Plus Utility** is designed to help new and experienced players in Mythic+ dungeons by showing which utility ability they should take and where to use it.
 
+## Usage
+* `/mpu` - opens addon settings out of combat
+* `/mpu show` - opens utility frame for selected dungeon in settings
+
 ## Key Features
 * Customisable Frame with utility abilities for a dungeon
 * Clickable ability icons to show where to use that ability
