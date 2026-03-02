@@ -23,5 +23,6 @@ jobs:
           handle_missing: DeletePhrase
           exclude:
             Libs/*
+            Locales/*
         env:
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
