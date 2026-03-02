@@ -33,7 +33,7 @@ https://www.curseforge.com/wow/addons/mythic-plus-utility-mpu
 * An option to add custom dungeon entries
 
 ## Localisation
-I will be glad if you could help with the addon localisation through the Curseforge localisation feature.
+I will be glad if you could help with the addon localisation through the [Curseforge localisation](https://legacy.curseforge.com/wow/addons/mythic-plus-utility-mpu/localization) feature.
 
 ## Issues & Feedback
 Found a bug or have a suggestion? Open an Issue on [GitHub](https://github.com/Nikyou/MythicPlusUtility/issues) or reach out on Discord!
