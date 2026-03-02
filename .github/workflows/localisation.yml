@@ -20,7 +20,6 @@ jobs:
       - name: Upload localisations
         uses: p3lim/curseforge-localizations@v2
         with:
-          handle_missing: DeletePhrase
           exclude: |
             Libs/**/*
             Locales/*
