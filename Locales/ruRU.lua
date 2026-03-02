@@ -2,11 +2,11 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MythicPlusUtility", "ruRU")
 if not L then return end
 
 -- Options
-L["Toggle Frame"] = "Переключение окна"
-L["Frame Position and Size Settings"] = "Размер и положение окна"
+L["Toggle Window"] = "Переключение окна"
+L["Window Position and Size Settings"] = "Размер и положение окна"
 L["Width"] = "Ширина"
 L["Height"] = "Высота"
-L["Lock Frame"] = "Отключить перемещение окна"
+L["Lock Window"] = "Отключить перемещение окна"
 L["Anchor to Screen's"] = "Закрепить за экран"
 L["X Offset"] = "Смещение по X"
 L["Y Offset"] = "Смещение по Y"
@@ -24,6 +24,10 @@ L["Show in"] = "Показывать в"
 L["Normal"] = "Обычный"
 L["Heroic"] = "Героический"
 L["Mythic"] = "Эпохальный"
+
+L["Show/Hide Utility Window"] = "Показать/Скрыть окно"
+L["Open Settings"] = "Открыть настройки"
+L["Disable Minimap Button"] = "Отключить кнопку миникарты"
 
 -- Dungeons
 L["Algeth\'ar Academy"] = "Академия Алгет\'ар"

@@ -1,6 +1,7 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("MythicPlusUtility")
 
 MythicPlusUtility.defaults = {
+    global = {minimap = {hide = false}},
     profile = {
         toggleFrameLock = true,
         hideOnStart = true,
@@ -19,20 +20,19 @@ MythicPlusUtility.defaults = {
     },
 }
 
--- https://www.wowace.com/projects/ace3/pages/ace-config-3-0-options-tables
 MythicPlusUtility.options = {
     type = "group",
     name = "Mythic Plus Utility",
     handler = MythicPlusUtility,
     childGroups = "tab",
     args = {
-        toggleFrame = {type = "execute", order = 1, name = L["Toggle Frame"], func = "ToggleAbilitiesFrame"},
+        toggleFrame = {type = "execute", order = 1, name = L["Toggle Window"], func = "ToggleAbilitiesFrame"},
         breakLine1 = {type = "header", order = 10, name = ""},
         breakLine2 = {type = "header", order = 20, name = ""},
         frameGroup = {
             type = "group",
             order = 1,
-            name = L["Frame Position and Size Settings"],
+            name = L["Window Position and Size Settings"],
             args = {
                 frameWidth = {
                     type = "range",
@@ -68,7 +68,7 @@ MythicPlusUtility.options = {
                 toggleFrameLock = {
                     type = "toggle",
                     order = 12,
-                    name = L["Lock Frame"],
+                    name = L["Lock Window"],
                     get = "GetValue",
                     set = "SetValue",
                 },
@@ -219,8 +219,6 @@ MythicPlusUtility.options = {
     },
 }
 
--- for documentation on the info table
--- https://www.wowace.com/projects/ace3/pages/ace-config-3-0-options-tables#title-4-1
 function MythicPlusUtility:GetValue(info) return self.db.profile[info[#info]] end
 
 function MythicPlusUtility:SetValue(info, value) self.db.profile[info[#info]] = value end

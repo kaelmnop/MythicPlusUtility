@@ -52,7 +52,9 @@
         "ChatEdit_InsertLink",
         "OKAY",
         "ChatFrameUtil",
-        "NOT_BOUND"
+        "NOT_BOUND",
+        "BINDING_NAME_MOVIE_RECORDING_GUI",
+        "CLICK_BINDING_OPEN_MENU"
     ],
     "Lua.type.weakUnionCheck": true
 }

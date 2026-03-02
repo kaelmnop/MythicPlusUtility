@@ -1,11 +1,11 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("MythicPlusUtility", "enUS", true)
 
 -- Options
-L["Toggle Frame"] = true
-L["Frame Position and Size Settings"] = true
+L["Toggle Window"] = true
+L["Window Position and Size Settings"] = true
 L["Width"] = true
 L["Height"] = true
-L["Lock Frame"] = true
+L["Lock Window"] = true
 L["Anchor to Screen's"] = true
 L["X Offset"] = true
 L["Y Offset"] = true
@@ -22,6 +22,10 @@ L["Show in"] = true
 L["Normal"] = true
 L["Heroic"] = true
 L["Mythic"] = true
+
+L["Show/Hide Utility Window"] = true
+L["Open Settings"] = true
+L["Disable Minimap Button"] = true
 
 -- Dungeons
 L["Algeth\'ar Academy"] = true
