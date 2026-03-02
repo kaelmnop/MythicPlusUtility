@@ -36,6 +36,6 @@ https://www.curseforge.com/wow/addons/mythic-plus-utility-mpu
 I will be glad if you could help with the addon localisation through the Curseforge localisation feature.
 
 ## Issues & Feedback
-Found a bug or have a suggestion? Reach out on Discord!
+Found a bug or have a suggestion? Open an Issue on [GitHub](https://github.com/Nikyou/MythicPlusUtility/issues) or reach out on Discord!
 
 💬 Discord: Nikyou ☕ Support: [buymeacoffee.com/nikyou](https://buymeacoffee.com/nikyou)
