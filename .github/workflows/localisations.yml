@@ -22,6 +22,6 @@ jobs:
         with:
           handle_missing: DeletePhrase # optional
           exclude: | # optional
-            libs/*
+            Libs/*
         env:
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
