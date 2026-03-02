@@ -39,3 +39,6 @@ I will be glad if you could help with the addon localisation through the [Cursef
 Found a bug or have a suggestion? Open an Issue on [GitHub](https://github.com/Nikyou/MythicPlusUtility/issues) or reach out on Discord!
 
 💬 Discord: Nikyou ☕ Support: [buymeacoffee.com/nikyou](https://buymeacoffee.com/nikyou)
+
+## Credits
+Thanks to Tactyks and his [Ability Tracking Sheet](https://docs.google.com/spreadsheets/d/11pOj8w823fjBJqnOWTCA9vwL8_TVJF-kWFCK6WGJ7Jk) for information about dungeon abilities.
