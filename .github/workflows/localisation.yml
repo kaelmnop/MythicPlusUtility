@@ -22,6 +22,15 @@ jobs:
         with:
           exclude: |
             Libs/**/*
-            Locales/*
+            Locales/deDE.lua
+            Locales/esES.lua
+            Locales/esMX.lua
+            Locales/frFR.lua
+            Locales/itIT.lua
+            Locales/koKR.lua
+            Locales/ptBR.lua
+            Locales/ruRU.lua
+            Locales/zhCN.lua
+            Locales/zhTW.lua
         env:
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
