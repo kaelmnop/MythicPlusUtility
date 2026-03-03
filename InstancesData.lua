@@ -221,7 +221,7 @@ MythicPlusUtility.instancesData = {
             text = format(L["Slow {npc:%d} on the third boss {npc:%d}."], 76227, 76379),
             tags = "[creature_slow][creature_root][creature_grip]",
         }, { -- Solar Zealot NPC
-            text = format(L["Stun {npc:%d} on the last boss {npc:%d}."], 76227, 76266),
+            text = format(L["Stun {npc:%d} on the last boss {npc:%d}."], 76267, 76266),
             tags = "[creature_stun][creature_fear][creature_incapacitate]",
         }, -- Trash
         { -- Blade Rush
@@ -234,7 +234,7 @@ MythicPlusUtility.instancesData = {
             text = format(L["{spell:%d} buff is cast by {npc:%d}."], 1273356, 79462),
             tags = "[important][purge]",
         }, { -- Bloodcrazed
-            text = format(L["{spell:%d} is cast by {npc:%d}."], 1254686, 79093),
+            text = format(L["{spell:%d} is cast by {npc:%d}."], 1254690, 79093),
             tags = "[creature_slow][creature_root]",
         }, { -- Rushing Winds
             text = format(L["{spell:%d} buff on {npc:%d}."], 1254670, 78096),

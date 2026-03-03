@@ -94,7 +94,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
     function frame:ChangeInstance()
         MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(profile.instanceID)
-        self.dungeonNameText:SetText(self.dungeonIdToName[profile.instanceID] or "")
+        self.dungeonNameText:SetText(MythicPlusUtility.dungeonIdToName[profile.instanceID] or "")
         self:UpdateButtons()
         self:UpdateLayout()
     end
@@ -130,7 +130,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     frame.buttons = {}
 
     function frame:UpdateLayout()
-        local currentY = -TOP_PADDING - self.dungeonNameText:GetBottom()
+        local currentY = -TOP_PADDING - self:GetTop() + self.dungeonNameText:GetBottom()
         self.listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING, currentY)
 
         for id, _ in ipairs(MythicPlusUtility.buttonsIndices) do
@@ -218,7 +218,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                         line:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
                         line:SetText(text)
 
-                        if i == 1 then
+                        if listId == 1 then
                             line:SetPoint("TOPLEFT", 0, 0)
                         else
                             line:SetPoint("TOPLEFT", button.listFrame.lines[listId - 1], "BOTTOMLEFT", 0, -4)
@@ -377,7 +377,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     listEmptyText:SetWidth(profile.frameWidth - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
     listEmptyText:SetText("No utility abilities for this dungeon")
     listEmptyText:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
-    listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING, -TOP_PADDING - frame.dungeonNameText:GetBottom())
+    listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING,
+                           -TOP_PADDING - frame:GetTop() + frame.dungeonNameText:GetBottom())
     listEmptyText:Hide()
 
     frame.listEmptyText = listEmptyText
