@@ -15,7 +15,7 @@ https://www.curseforge.com/wow/addons/mythic-plus-utility-mpu
 ## Key Features
 
 *   Customisable Window with utility abilities for a dungeon
-*   Clickable ability icons to show where to use that ability
+*   Clickable icons to show where to use that ability
 *   Unlearned abilities are desaturated
 *   Abilities that are used only on yourself have a special symbol near their name
 *   Entries where to use an ability have an importance distinction:
