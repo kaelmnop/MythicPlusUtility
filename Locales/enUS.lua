@@ -10,6 +10,7 @@ L["Anchor to Screen's"] = true
 L["X Offset"] = true
 L["Y Offset"] = true
 L["Text and Icon Size Settings"] = true
+L["Dungeon Name Size"] = true
 L["Icon Size"] = true
 L["Icon Label Size"] = true
 L["Body Text Size"] = true
@@ -19,6 +20,8 @@ L["Hide not Important"] = true
 L["Hides dungeon entries that are marked with %s"] = true
 L["Dungeon Preview"] = true
 L["Show in"] = true
+
+-- Difficulty
 L["Normal"] = true
 L["Heroic"] = true
 L["Mythic"] = true

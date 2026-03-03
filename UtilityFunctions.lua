@@ -1,3 +1,5 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("MythicPlusUtility")
+
 MythicPlusUtility.supportedTags = {
     cc_aberration = true, -- Aberration that needs a CC effect
     cc_beast = true, -- Beast that needs a CC effect
@@ -37,6 +39,18 @@ MythicPlusUtility.supportedTags = {
     -- important = true, -- Sets entry as important
     -- super_important = true, -- Sets entry as super important
 }
+
+MythicPlusUtility.dungeonIdToName = {
+    [2526] = L["Algeth\'ar Academy"],
+    [2811] = L["Magisters\' Terrace"],
+    [2874] = L["Maisara Caverns"],
+    [123] = L["Nexus-Point Xenas"],
+    [658] = L["Pit of Saron"],
+    [1753] = L["Seat of the Triumvirate"],
+    [1209] = L["Skyreach"],
+    [2805] = L["Windrunner Spire"],
+}
+
 function MythicPlusUtility:IsSpellKnownHandler(spellId, isPet)
     isPet = isPet or false
     local known = false
