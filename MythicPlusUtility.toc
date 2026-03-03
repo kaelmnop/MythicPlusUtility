@@ -22,8 +22,8 @@ Libs\LibStub\LibStub.lua
 
 Core.lua
 Locales.xml
-Options.lua
 UtilityFunctions.lua
+Options.lua
 SpellsData.lua
 InstancesData.lua
 UtilityAbilitiesFrame.lua

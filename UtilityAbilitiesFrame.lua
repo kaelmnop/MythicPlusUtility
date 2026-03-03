@@ -21,6 +21,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     local RIGHT_PADDING = 5
     local TOP_PADDING = 5
     local TEXT_WRAP_PADDING = 7
+    local CLOSE_BUTTON_SIZE = 15
 
     local db = self.db
     local profile = self.db.profile
@@ -45,17 +46,14 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
     frame:SetScript("OnDragStop", function(self)
         self:StopMovingOrSizing()
-
         local left = self:GetLeft()
         local top = self:GetTop()
         local screenWidth = GetScreenWidth()
         local screenHeight = GetScreenHeight()
-
         local x = 0
         local y = 0
 
         local framePoint = profile.selectFramePoint
-
         self:ClearAllPoints()
 
         if framePoint == "TOPLEFT" then
@@ -92,11 +90,11 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
         self:SetPoint("TOPLEFT", UIParent, framePoint, x, y)
 
         ACR:NotifyChange("MythicPlusUtility_Options")
-
     end)
 
     function frame:ChangeInstance()
         MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(profile.instanceID)
+        self.dungeonNameText:SetText(MythicPlusUtility.dungeonIdToName[profile.instanceID] or "")
         self:UpdateButtons()
         self:UpdateLayout()
     end
@@ -132,8 +130,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     frame.buttons = {}
 
     function frame:UpdateLayout()
-        local currentY = -TOP_PADDING
-        self.listEmptyText:SetWidth(profile.frameWidth - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
+        local currentY = -TOP_PADDING - self:GetTop() + self.dungeonNameText:GetBottom()
+        self.listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING, currentY)
 
         for id, _ in ipairs(MythicPlusUtility.buttonsIndices) do
             local button = self.buttons[id]
@@ -220,7 +218,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                         line:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
                         line:SetText(text)
 
-                        if i == 1 then
+                        if listId == 1 then
                             line:SetPoint("TOPLEFT", 0, 0)
                         else
                             line:SetPoint("TOPLEFT", button.listFrame.lines[listId - 1], "BOTTOMLEFT", 0, -4)
@@ -317,6 +315,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     end
 
     function frame:UpdateFont()
+        self.dungeonNameText:SetFont("Fonts\\FRIZQT__.TTf", profile.dungeonNameSize, nil)
         self.listEmptyText:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
         if #self.buttons > 0 then
             for _, button in ipairs(self.buttons) do
@@ -326,11 +325,13 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     line:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
                 end
             end
-            self:UpdateLayout()
         end
+        self:UpdateLayout()
     end
 
     function frame:UpdateTextWrap()
+        self.dungeonNameText:SetWidth(profile.frameWidth - 2 * CLOSE_BUTTON_SIZE - TEXT_WRAP_PADDING)
+        self.listEmptyText:SetWidth(profile.frameWidth - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
         for id, _ in ipairs(MythicPlusUtility.buttonsIndices) do
             local button = self.buttons[id]
             button.label:SetWidth(profile.frameWidth - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 1)
@@ -339,10 +340,11 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                                                          - TEXT_WRAP_PADDING)
             end
         end
+        self:UpdateLayout()
     end
 
     local closeButton = CreateFrame("Button", nil, frame)
-    closeButton:SetSize(15, 15)
+    closeButton:SetSize(CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE)
     closeButton:SetPoint("TOPRIGHT", 1, 1)
 
     local texture = closeButton:CreateTexture(nil, "ARTWORK")
@@ -358,13 +360,25 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     closeButton:SetScript("OnLeave", function(self) self.texture:SetAtlas("simplecheckout-close-normal-1x") end)
     closeButton:SetScript("OnClick", function(self) frame:SetShownHandler(false) end)
 
+    local dungeonNameText = frame:CreateFontString(nil, "OVERLAY", "ChatFontNormal")
+    dungeonNameText:SetJustifyH("CENTER")
+    dungeonNameText:SetJustifyV("TOP")
+    dungeonNameText:SetWordWrap(true)
+    dungeonNameText:SetWidth(profile.frameWidth - 2 * CLOSE_BUTTON_SIZE - TEXT_WRAP_PADDING)
+    dungeonNameText:SetText(self.dungeonIdToName[profile.instanceID] or "")
+    dungeonNameText:SetFont("Fonts\\FRIZQT__.TTf", profile.dungeonNameSize, "OUTLINE")
+    dungeonNameText:SetPoint("TOP", 0, -TOP_PADDING)
+
+    frame.dungeonNameText = dungeonNameText
+
     local listEmptyText = frame:CreateFontString(nil, "OVERLAY", "ChatFontNormal")
     listEmptyText:SetJustifyH("LEFT")
     listEmptyText:SetWordWrap(true)
     listEmptyText:SetWidth(profile.frameWidth - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
     listEmptyText:SetText("No utility abilities for this dungeon")
     listEmptyText:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
-    listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING, -TOP_PADDING * 2)
+    listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING,
+                           -TOP_PADDING - frame:GetTop() + frame.dungeonNameText:GetBottom())
     listEmptyText:Hide()
 
     frame.listEmptyText = listEmptyText

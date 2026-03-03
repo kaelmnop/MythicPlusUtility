@@ -13,6 +13,7 @@ MythicPlusUtility.defaults = {
         buttonSize = 35,
         labelFontSize = 12,
         textFontSize = 12,
+        dungeonNameSize = 20,
         hideNotImportant = false,
         instanceID = 2526,
         selectFramePoint = "TOPLEFT",
@@ -44,7 +45,6 @@ MythicPlusUtility.options = {
                         if MythicPlusUtility.Frame then
                             MythicPlusUtility.Frame:SetWidth(value)
                             MythicPlusUtility.Frame:UpdateTextWrap()
-                            MythicPlusUtility.Frame:UpdateLayout()
                         end
                     end,
                     min = 150,
@@ -123,7 +123,7 @@ MythicPlusUtility.options = {
             args = {
                 buttonSize = {
                     type = "range",
-                    order = 1,
+                    order = 11,
                     name = L["Icon Size"],
                     get = "GetValue",
                     set = "SetValueUpdateButtonSize",
@@ -134,7 +134,7 @@ MythicPlusUtility.options = {
                 },
                 labelFontSize = {
                     type = "range",
-                    order = 2,
+                    order = 12,
                     name = L["Icon Label Size"],
                     get = "GetValue",
                     set = "SetValueUpdateFont",
@@ -145,8 +145,19 @@ MythicPlusUtility.options = {
                 },
                 textFontSize = {
                     type = "range",
-                    order = 11,
+                    order = 2,
                     name = L["Body Text Size"],
+                    get = "GetValue",
+                    set = "SetValueUpdateFont",
+                    min = 1,
+                    softMin = 5,
+                    softMax = 40,
+                    step = 1,
+                },
+                dungeonNameSize = {
+                    type = "range",
+                    order = 1,
+                    name = L["Dungeon Name Size"],
                     get = "GetValue",
                     set = "SetValueUpdateFont",
                     min = 1,
@@ -206,14 +217,14 @@ MythicPlusUtility.options = {
             set = "SetValueChangeInstance",
             sorting = {2526, 2811, 2874, 123, 658, 1753, 1209, 2805},
             values = {
-                [2526] = L["Algeth\'ar Academy"],
-                [2811] = L["Magisters\' Terrace"],
-                [2874] = L["Maisara Caverns"],
-                [123] = L["Nexus-Point Xenas"],
-                [658] = L["Pit of Saron"],
-                [1753] = L["Seat of the Triumvirate"],
-                [1209] = L["Skyreach"],
-                [2805] = L["Windrunner Spire"],
+                [2526] = MythicPlusUtility.dungeonIdToName[2526],
+                [2811] = MythicPlusUtility.dungeonIdToName[2811],
+                [2874] = MythicPlusUtility.dungeonIdToName[2874],
+                [123] = MythicPlusUtility.dungeonIdToName[123],
+                [658] = MythicPlusUtility.dungeonIdToName[658],
+                [1753] = MythicPlusUtility.dungeonIdToName[1753],
+                [1209] = MythicPlusUtility.dungeonIdToName[1209],
+                [2805] = MythicPlusUtility.dungeonIdToName[2805],
             },
         },
     },

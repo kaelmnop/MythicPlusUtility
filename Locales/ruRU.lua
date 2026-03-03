@@ -11,6 +11,7 @@ L["Anchor to Screen's"] = "Закрепить за экран"
 L["X Offset"] = "Смещение по X"
 L["Y Offset"] = "Смещение по Y"
 L["Text and Icon Size Settings"] = "Размер текста и иконки"
+L["Dungeon Name Size"] = "Размер названия подземелья"
 L["Icon Size"] = "Размер иконки"
 L["Icon Label Size"] = "Размер названия иконки"
 L["Body Text Size"] = "Размер текста"
@@ -21,6 +22,8 @@ L["Hides dungeon entries that are marked with %s"] =
   "Скрывает записи в подземельях, помеченные %s"
 L["Dungeon Preview"] = "Просмотр подземелья"
 L["Show in"] = "Показывать в"
+
+-- Difficulty
 L["Normal"] = "Обычный"
 L["Heroic"] = "Героический"
 L["Mythic"] = "Эпохальный"

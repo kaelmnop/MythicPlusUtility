@@ -1,3 +1,5 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("MythicPlusUtility")
+
 MythicPlusUtility.supportedTags = {
     cc_aberration = true, -- Aberration that needs a CC effect
     cc_beast = true, -- Beast that needs a CC effect
@@ -37,6 +39,18 @@ MythicPlusUtility.supportedTags = {
     -- important = true, -- Sets entry as important
     -- super_important = true, -- Sets entry as super important
 }
+
+MythicPlusUtility.dungeonIdToName = {
+    [2526] = L["Algeth\'ar Academy"],
+    [2811] = L["Magisters\' Terrace"],
+    [2874] = L["Maisara Caverns"],
+    [123] = L["Nexus-Point Xenas"],
+    [658] = L["Pit of Saron"],
+    [1753] = L["Seat of the Triumvirate"],
+    [1209] = L["Skyreach"],
+    [2805] = L["Windrunner Spire"],
+}
+
 function MythicPlusUtility:IsSpellKnownHandler(spellId, isPet)
     isPet = isPet or false
     local known = false
@@ -58,12 +72,13 @@ function MythicPlusUtility:tablecopy(tbl)
 end
 
 function MythicPlusUtility:GetSpellNameById(spellId)
-    if self.db.locale.spellIdToName[spellId] then
-        return self.db.locale.spellIdToName[spellId]
+    local db = self.db.locale
+    if db.spellIdToName[spellId] and db.spellIdToName[spellId] ~= "" then
+        return db.spellIdToName[spellId]
     else
         local spellInfo = C_Spell.GetSpellInfo(spellId)
         if spellInfo and spellInfo.name then
-            self.db.locale.spellIdToName[spellId] = spellInfo.name
+            db.spellIdToName[spellId] = spellInfo.name
             return spellInfo.name
         end
     end
@@ -71,12 +86,13 @@ function MythicPlusUtility:GetSpellNameById(spellId)
 end
 
 function MythicPlusUtility:GetSpellIconById(spellId)
-    if self.db.locale.spellIdToIconId[spellId] then
-        return self.db.locale.spellIdToIconId[spellId]
+    local db = self.db.locale
+    if db.spellIdToIconId[spellId] and db.spellIdToIconId[spellId] ~= "" then
+        return db.spellIdToIconId[spellId]
     else
         local spellInfo = C_Spell.GetSpellInfo(spellId)
         if spellInfo and spellInfo.originalIconID then
-            self.db.locale.spellIdToIconId[spellId] = spellInfo.originalIconID
+            db.spellIdToIconId[spellId] = spellInfo.originalIconID
             return spellInfo.originalIconID
         end
     end
@@ -84,13 +100,14 @@ function MythicPlusUtility:GetSpellIconById(spellId)
 end
 
 function MythicPlusUtility:GetSpellHyperlinkById(spellId)
-    if self.db.locale.spellIdToHyperlink[spellId] then
-        return self.db.locale.spellIdToHyperlink[spellId]
+    local db = self.db.locale
+    if db.spellIdToHyperlink[spellId] and not string.find(db.spellIdToHyperlink[spellId], ":0|h%[%]|h") then
+        return db.spellIdToHyperlink[spellId]
     else
         local spellName = self:GetSpellNameById(spellId)
-        if spellName then
-            self.db.locale.spellIdToHyperlink[spellId] = format("|cff71d5ff|Hspell:%s:0|h[%s]|h|r", spellId, spellName)
-            return self.db.locale.spellIdToHyperlink[spellId]
+        if spellName and spellName ~= "" then
+            db.spellIdToHyperlink[spellId] = format("|cff71d5ff|Hspell:%s:0|h[%s]|h|r", spellId, spellName)
+            return db.spellIdToHyperlink[spellId]
         end
     end
     return ""
@@ -99,8 +116,9 @@ end
 function MythicPlusUtility:IconToChatIcon(iconId) return format("|T%s:0:0:0:0|t", iconId) end
 
 function MythicPlusUtility:GetNpcNameById(npcId)
-    if self.db.locale.npcIdToName[npcId] then
-        return self.db.locale.npcIdToName[npcId]
+    local db = self.db.locale
+    if db.npcIdToName[npcId] and db.npcIdToName[npcId] ~= "" then
+        return db.npcIdToName[npcId]
     else
         local guid = format("Creature-0-0-0-0-%s-0", npcId)
         local tooltipData = C_TooltipInfo.GetHyperlink(format("unit:%s", guid))
@@ -112,7 +130,7 @@ function MythicPlusUtility:GetNpcNameById(npcId)
                     break
                 end
             end
-            self.db.locale.npcIdToName[npcId] = name
+            db.npcIdToName[npcId] = name
             return name
         end
     end
@@ -120,14 +138,15 @@ function MythicPlusUtility:GetNpcNameById(npcId)
 end
 
 function MythicPlusUtility:GetNpcHyperlinkById(npcId)
-    if self.db.locale.npcIdToHyperlink[npcId] then
-        return self.db.locale.npcIdToHyperlink[npcId]
+    local db = self.db.locale
+    if db.npcIdToHyperlink[npcId] and not string.find(db.npcIdToHyperlink[npcId], "|h%[%]|h|r") then
+        return db.npcIdToHyperlink[npcId]
     else
         local npcName = self:GetNpcNameById(npcId)
         if npcName then
-            self.db.locale.npcIdToHyperlink[npcId] = format("|cffffd100|Hunit:Creature-0-0-0-0-%s-0:%s|h[%s]|h|r",
-                                                            npcId, npcName, npcName)
-            return self.db.locale.npcIdToHyperlink[npcId]
+            db.npcIdToHyperlink[npcId] = format("|cffffd100|Hunit:Creature-0-0-0-0-%s-0:%s|h[%s]|h|r", npcId, npcName,
+                                                npcName)
+            return db.npcIdToHyperlink[npcId]
         end
     end
     return ""
