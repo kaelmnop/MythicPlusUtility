@@ -45,7 +45,6 @@ MythicPlusUtility.options = {
                         if MythicPlusUtility.Frame then
                             MythicPlusUtility.Frame:SetWidth(value)
                             MythicPlusUtility.Frame:UpdateTextWrap()
-                            MythicPlusUtility.Frame:UpdateLayout()
                         end
                     end,
                     min = 150,

@@ -340,6 +340,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                                                          - TEXT_WRAP_PADDING)
             end
         end
+        self:UpdateLayout()
     end
 
     local closeButton = CreateFrame("Button", nil, frame)
