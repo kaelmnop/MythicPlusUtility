@@ -11,3 +11,5 @@
 * Some npc names were not properly showing, changed source to encounter journal entry for these cases.
 * Deep Breath and Breath of Eons was not showing for Evokers
 * Removed Bitter Immunity for Warriors
+* Chaos Nova is now shown only to Havoc and Vengance Demon Hunters
+* Void Nova is added for Devourer Demon Hunter

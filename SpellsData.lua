@@ -91,15 +91,20 @@ MythicPlusUtility.utilityAbilities = {
         [198793] = {tags = "[self_only][snare]"}, -- Vengeful Retreat
         [207684] = {tags = "[creature_fear]"}, -- Sigil of Misery
         [217832] = {tags = "[cc_demon][cc_beast][cc_humanoid]"}, -- Imprison
-        [179057] = {tags = "[creature_stun]"}, -- Chaos Nova
         [278326] = {tags = "[purge]"}, -- Consume Magic
         [1266316] = {tags = "[self_only][disease]"}, -- Burn It Out
         [1266496] = {tags = "[self_only][curse]"}, -- Soul Cleanse
         [131347] = {tags = "[self_only][player_jump]", baseline = true}, -- Glide
     },
-    [577] = {}, -- Havoc
-    [581] = {}, -- Vengeance
-    [1480] = {}, -- Devourer
+    [577] = {
+        [179057] = {tags = "[creature_stun]"}, -- Chaos Nova
+    }, -- Havoc
+    [581] = {
+        [179057] = {tags = "[creature_stun]"}, -- Chaos Nova
+    }, -- Vengeance
+    [1480] = {
+        [1234195] = {tags = "[creature_stun]"}, -- Void Nova
+    }, -- Devourer
     DRUID = {
         [22570] = {tags = "[creature_stun]"}, -- Maim
         [2637] = {tags = "[cc_beast][cc_dragonkin]"}, -- Hibernate
