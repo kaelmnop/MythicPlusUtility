@@ -122,8 +122,9 @@ function MythicPlusUtility:GetNpcNameById(npcId)
     if db.npcIdToName[npcId] and db.npcIdToName[npcId] ~= "" then
         return db.npcIdToName[npcId]
     elseif self.npcIdToEncounterSectionId[npcId] then
+        local name = ""
         local info = C_EncounterJournal.GetSectionInfo(self.npcIdToEncounterSectionId[npcId])
-        local name = info.title
+        if info and info.title then name = info.title end
         db.npcIdToName[npcId] = name
 
         return name
