@@ -1,3 +1,3 @@
-## 1.0.3
-# Update
-* Added dungeon name to Utility Window
+## 1.0.4
+# Fixes
+* Fixed Cyrillic not showing properly
