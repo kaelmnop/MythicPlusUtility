@@ -123,7 +123,9 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
     local background = frame:CreateTexture(nil, "ARTWORK")
     background:SetAllPoints()
-    background:SetColorTexture(0, 0, 0, profile.frameBackgroundAlpha)
+
+    background:SetColorTexture(profile.frameBackground.r, profile.frameBackground.g, profile.frameBackground.b,
+                               profile.frameBackground.a)
 
     frame.background = background
 

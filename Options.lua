@@ -9,7 +9,7 @@ MythicPlusUtility.defaults = {
         frameHeight = 600,
         frameXOffset = 100,
         frameYOffset = -150,
-        frameBackgroundAlpha = 0.5,
+        frameBackground = {r = 0, g = 0, b = 0, a = 0.5},
         buttonSize = 35,
         labelFontSize = 12,
         textFontSize = 12,
@@ -168,15 +168,19 @@ MythicPlusUtility.options = {
                 breakLine1 = {type = "header", order = 10, name = ""},
             },
         },
-        frameBackgroundAlpha = {
-            type = "range",
+        frameBackground = {
+            type = "color",
+            hasAlpha = true,
             order = 12,
-            name = L["Background Opacity"],
-            get = "GetValue",
-            set = function(info, value)
-                MythicPlusUtility.db.profile[info[#info]] = value
+            name = L["Background Color"],
+            get = function(info)
+                local t = MythicPlusUtility.db.profile[info[#info]]
+                return t.r, t.g, t.b, t.a
+            end,
+            set = function(info, r, g, b, a)
+                MythicPlusUtility.db.profile[info[#info]] = {r = r, g = g, b = b, a = a}
                 if MythicPlusUtility.Frame then
-                    MythicPlusUtility.Frame.background:SetColorTexture(0, 0, 0, value)
+                    MythicPlusUtility.Frame.background:SetColorTexture(r, g, b, a)
                 end
             end,
             min = 0,

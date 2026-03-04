@@ -15,6 +15,7 @@ L["Icon Size"] = true
 L["Icon Label Size"] = true
 L["Body Text Size"] = true
 L["Background Opacity"] = true
+L["Background Color"] = true
 L["Hide on Mythic+ start"] = true
 L["Hide not Important"] = true
 L["Hides dungeon entries that are marked with %s"] = true

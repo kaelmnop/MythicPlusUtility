@@ -16,6 +16,7 @@ L["Icon Size"] = "Размер иконки"
 L["Icon Label Size"] = "Размер названия иконки"
 L["Body Text Size"] = "Размер текста"
 L["Background Opacity"] = "Прозрачность фона"
+L["Background Color"] = "Цвет фона"
 L["Hide on Mythic+ start"] = "Скрыть при начале Эпохальный+"
 L["Hide not Important"] = "Скрыть неважные"
 L["Hides dungeon entries that are marked with %s"] =
