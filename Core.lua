@@ -40,6 +40,7 @@ function MythicPlusUtility:OnInitialize()
 end
 
 function MythicPlusUtility:OnEnable()
+    self.db.profile.font = GetLocale() == "ruRU" and "Fonts\\FRIZQT___CYR.TTf" or "Fonts\\FRIZQT__.TTf" -- temporary hotfix
     self:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
     self:RegisterEvent("TRAIT_CONFIG_UPDATED")
     self:RegisterEvent("PLAYER_ENTERING_WORLD")
