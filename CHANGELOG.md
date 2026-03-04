@@ -1,7 +1,7 @@
 ## 1.0.4
 # New Features
 * Added more customisation to Utility Window:
-    * Show non baseline abilities needed for this dungeon (can be disabled)
+    * Show which non baseline abilities to unlearn for this dungeon (can be disabled)
     * Options for display for abilities above, red hue by default
     * More options for unlearned abilities
     * More options for needed abilities
