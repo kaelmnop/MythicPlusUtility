@@ -51,6 +51,8 @@ MythicPlusUtility.dungeonIdToName = {
     [2805] = L["Windrunner Spire"],
 }
 
+MythicPlusUtility.npcIdToEncounterSectionId = {[76227] = 33940}
+
 function MythicPlusUtility:IsSpellKnownHandler(spellId, isPet)
     isPet = isPet or false
     local known = false
@@ -119,6 +121,12 @@ function MythicPlusUtility:GetNpcNameById(npcId)
     local db = self.db.locale
     if db.npcIdToName[npcId] and db.npcIdToName[npcId] ~= "" then
         return db.npcIdToName[npcId]
+    elseif self.npcIdToEncounterSectionId[npcId] then
+        local info = C_EncounterJournal.GetSectionInfo(self.npcIdToEncounterSectionId[npcId])
+        local name = info.title
+        db.npcIdToName[npcId] = name
+
+        return name
     else
         local guid = format("Creature-0-0-0-0-%s-0", npcId)
         local tooltipData = C_TooltipInfo.GetHyperlink(format("unit:%s", guid))
