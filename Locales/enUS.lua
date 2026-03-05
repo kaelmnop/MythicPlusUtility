@@ -76,3 +76,11 @@ L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d}). Also, thi
   true
 L["{spell:%d} debuff is inflicted by {npc:%d}. Also, this debuff can be avoided."] = true
 L["{spell:%d} debuff is inflicted by the third boss {npc:%d}. Also, this debuff can be avoided."] = true
+L["Avoid {spell:%d} when {npc:%d} casts on last seconds."] = true
+L["Avoid {spell:%d} when the first boss {npc:%d} starts channeling."] = true
+L["Avoid {spell:%d} when totem starts channeling on the last boss {npc:%d}."] = true
+L["Avoid {spell:%d} when {npc:%d} starts channeling."] = true
+L["Avoid {spell:%d} when {npc:%d} starts channeling on the third boss {npc:%d}."] = true
+L["Avoid {spell:%d} when {npc:%d} jumps on you."] = true
+L["Avoid {spell:%d} when the last boss {npc:%d} starts channeling."] = true
+L["Avoid {spell:%d} when {npc:%d} throws axe."] = true

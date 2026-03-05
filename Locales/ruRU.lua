@@ -102,3 +102,19 @@ L["{spell:%d} debuff is inflicted by {npc:%d}. Also, this debuff can be avoided.
   "{spell:%d} дебафф, который накладывает {npc:%d}. Также, этот дебафф можно избежать."
 L["{spell:%d} debuff is inflicted by the third boss {npc:%d}. Also, this debuff can be avoided."] =
   "{spell:%d} дебафф, который накладывает второй босс {npc:%d}. Также, этот дебафф можно избежать."
+L["Avoid {spell:%d} when {npc:%d} casts on last seconds."] =
+  "Избегите {spell:%d}, когда {npc:%d} произносит на последних секундах."
+L["Avoid {spell:%d} when the first boss {npc:%d} starts channeling."] =
+  "Избегите {spell:%d}, когда первый босс {npc:%d} начинает поддерживать заклинание."
+L["Avoid {spell:%d} when totem starts channeling on the last boss {npc:%d}."] =
+  "Избегите {spell:%d}, когда тотем начинает поддерживать заклинание на последнем боссе {npc:%d}."
+L["Avoid {spell:%d} when {npc:%d} starts channeling."] =
+  "Избегите {spell:%d}, когда {npc:%d} начинает поддерживать заклинание."
+L["Avoid {spell:%d} when {npc:%d} starts channeling on the third boss {npc:%d}."] =
+  "Избегите {spell:%d}, когда {npc:%d} начинает поддерживать заклинание на третьем боссе {npc:%d}."
+L["Avoid {spell:%d} when {npc:%d} jumps on you."] =
+  "Избегите {spell:%d}, когда {npc:%d} прыгнет на вас."
+L["Avoid {spell:%d} when the last boss {npc:%d} starts channeling."] =
+  "Избегите {spell:%d}, когда последний босс {npc:%d} начинает поддерживать заклинание."
+L["Avoid {spell:%d} when {npc:%d} throws axe."] =
+  "Избегите {spell:%d}, когда {npc:%d} кинет топор."

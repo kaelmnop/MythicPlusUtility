@@ -68,9 +68,9 @@ MythicPlusUtility.classSpecialisations = {
 }
 
 MythicPlusUtility.utilityAbilitiesRacials = {
-    [20594] = {tags = "[poison][disease][curse][bleed]"}, -- Stoneform
-    [265221] = {tags = "[poison][disease][curse][bleed]"}, -- Fireblood
-    [58984] = {tags = "[targeted_avoid]"}, -- Shadowmeld
+    [20594] = {tags = "[poison][disease][curse][bleed]", baseline = true}, -- Stoneform
+    [265221] = {tags = "[poison][disease][curse][bleed]", baseline = true}, -- Fireblood
+    [58984] = {tags = "[targeted_avoid]", baseline = true}, -- Shadowmeld
 }
 
 MythicPlusUtility.utilityAbilities = {

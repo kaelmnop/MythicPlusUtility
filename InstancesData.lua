@@ -31,6 +31,12 @@ MythicPlusUtility.instancesData = {
               L["{spell:%d} is cast by {npc:%d} (trash before {npc:%d}). Also, this cast can be interrupted."], 388392,
               196044, 194181),
             tags = "[important][creature_stun][creature_incapacitate][creature_grip]",
+        }, { -- Monotonous Lecture
+            text = format(L["Avoid {spell:%d} when {npc:%d} casts on last seconds."], 388392, 196044),
+            tags = "[important][targeted_avoid]",
+        }, { -- Vicious Ambush
+            text = format(L["Avoid {spell:%d} when {npc:%d} jumps. Targets the furthest player."], 388940, 196671),
+            tags = "[important][targeted_avoid]",
         }, { -- Agitation
             text = format(L["{spell:%d} buff on {npc:%d} (trash before {npc:%d})."], 390938, 197406, 191736),
             tags = "[enrage]",
@@ -68,6 +74,9 @@ MythicPlusUtility.instancesData = {
               L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d}). Also, this cast can be interrupted and LoS."],
               1264693, 231552, 231864), -- First NpcId is wrong but has the same name 
             tags = "[important][fear]",
+        }, { -- Arcane Beam
+            text = format(L["Avoid {spell:%d} when {npc:%d} casts on last seconds."], 1282050, 257476),
+            tags = "[targeted_avoid]",
         },
     },
     [2874] = { -- Maisara Caverns
@@ -75,13 +84,19 @@ MythicPlusUtility.instancesData = {
         { -- Open Wound
             text = format(L["{spell:%d} debuff is inflicted by the first boss {npc:%d}."], 1266488, 247572),
             tags = "[important][bleed][physical_debuff]",
+        }, { -- Barrage
+            text = format(L["Avoid {spell:%d} when the first boss {npc:%d} starts channeling."], 1260643, 247570),
+            tags = "[targeted_avoid]",
         }, { -- Infected Pinions
             text = format(L["{spell:%d} debuff is inflicted by the first boss {npc:%d}."], 1246666, 247572),
             tags = "[disease][magic_debuff]",
+        }, { -- Soulbind
+            text = format(L["Avoid {spell:%d} when totem starts channeling on the last boss {npc:%d}."], 1252777, 248595),
+            tags = "[important][targeted_avoid]",
         }, { -- Unstable Phantom NPC
             text = format(L["Prevent {npc:%d} from reaching players or other {npc:%d} on the second boss {npc:%d}."],
                           250443, 250443, 248595),
-            tags = "[important][creature_root][creature_slow][cc_undead]",
+            tags = "[important][creature_slow]",
         }, { -- Cries of the Fallen
             text = format(L["{spell:%d} debuff is inflicted by contact with {npc:%d} on the last boss {npc:%d}."],
                           1254175, 1531, 248605),
@@ -115,6 +130,9 @@ MythicPlusUtility.instancesData = {
         }, { -- Rending Gore
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1256059, 248678),
             tags = "[bleed][physical_debuff]",
+        }, { -- Shrink
+            text = format(L["Avoid {spell:%d} when {npc:%d} starts channeling."], 1263292, 254740),
+            tags = "[targeted_avoid]",
         },
     },
     [123] = { -- Nexus-Point Xenas
@@ -126,6 +144,9 @@ MythicPlusUtility.instancesData = {
         }, { -- Supression Field
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 249081, 241647),
             tags = "[important][slow][snare][magic_debuff]",
+        }, { -- Entropic Leech
+            text = format(L["Avoid {spell:%d} when {npc:%d} starts channeling."], 1252062, 241660),
+            tags = "[targeted_avoid]",
         }, { -- Arcane Explosion
             text = format(L["{spell:%d} is channeled by {npc:%d}."], 1285445, 241644),
             tags = "[creature_stun][creature_fear][creature_incapacitate][creature_grip]",
@@ -181,6 +202,9 @@ MythicPlusUtility.instancesData = {
         }, { -- Rotting Strikes
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1258459, 252558),
             tags = "[disease][physical_debuff]",
+        }, { -- Torrent of Misery
+            text = format(L["Avoid {spell:%d} when {npc:%d} starts channeling."], 1258826, 252563),
+            tags = "[targeted_avoid]",
         },
     },
     [1753] = { -- Seat of the Triumvirate
@@ -194,6 +218,10 @@ MythicPlusUtility.instancesData = {
         }, { -- Mind Flay
             text = format(L["{spell:%d} is channeled by {npc:%d} on the third boss {npc:%d}."], 1268733, 122827, 124309),
             tags = "[creature_stun][creature_fear][creature_incapacitate]",
+        }, { -- Mind Flay
+            text = format(L["Avoid {spell:%d} when {npc:%d} starts channeling on the third boss {npc:%d}."], 1268733,
+                          122827, 124309),
+            tags = "[targeted_avoid]",
         }, -- Trash
         { -- Abyssal Enhancement
             text = format(L["{spell:%d} buff on {npc:%d}."], 1252909, 122404),
@@ -210,6 +238,9 @@ MythicPlusUtility.instancesData = {
         }, { -- Shadowmend
             text = format(L["{spell:%d} is cast by {npc:%d}."], 1277339, 122413),
             tags = "[creature_stun][creature_fear][creature_incapacitate][creature_grip]",
+        }, { -- Void Infusion
+            text = format(L["Avoid {spell:%d} when {npc:%d} starts channeling."], 1262508, 122423),
+            tags = "[targeted_avoid]",
         },
     },
     [1209] = { -- Skyreach
@@ -227,12 +258,18 @@ MythicPlusUtility.instancesData = {
         { -- Blade Rush
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1254475, 79303),
             tags = "[important][bleed][physical_debuff]",
+        }, { -- Blade Rush
+            text = format(L["Avoid {spell:%d} when {npc:%d} jumps on you."], 1254475, 79303),
+            tags = "[important][targeted_avoid]",
         }, { -- Mark of Death
             text = format(L["{spell:%d} is cast by {npc:%d}."], 1254686, 76154),
             tags = "[important][creature_stun][creature_fear][creature_incapacitate]",
         }, { -- Solar Barrier
             text = format(L["{spell:%d} buff is cast by {npc:%d}."], 1273356, 79462),
             tags = "[important][purge]",
+        }, { -- Solar Flame
+            text = format(L["Avoid {spell:%d} when {npc:%d} starts channeling."], 1253446, 76087),
+            tags = "[important][targeted_avoid]",
         }, { -- Bloodcrazed
             text = format(L["{spell:%d} is cast by {npc:%d}."], 1254690, 79093),
             tags = "[creature_slow][creature_root]",
@@ -254,16 +291,28 @@ MythicPlusUtility.instancesData = {
               L["{spell:%d} debuff is inflicted by the third boss {npc:%d}. Also, this debuff can be avoided."],
               1253030, 231631),
             tags = "[fear]",
+        }, { -- Bolt Gale
+            text = format(L["Avoid {spell:%d} when the last boss {npc:%d} starts channeling."], 474528, 231636),
+            tags = "[targeted_avoid]",
         }, -- Trash
         { -- Emphemeral Bloodlust
             text = format(L["{spell:%d} buff is cast by {npc:%d}."], 1216459, 232146),
             tags = "[important][enrage]",
+        }, { -- Fire Spit
+            text = format(L["Avoid {spell:%d} when {npc:%d} starts channeling."], 1216848, 236891),
+            tags = "[important][targeted_avoid]",
+        }, { -- Throw Axe
+            text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1217094, 232447),
+            tags = "[important][bleed][physical_debuff]",
+        }, { -- Throw Axe
+            text = format(L["Avoid {spell:%d} when {npc:%d} throws axe."], 1216848, 236891),
+            tags = "[important][targeted_avoid]",
+        }, { -- Bolstering Flames
+            text = format(L["{spell:%d} buff on {npc:%d}."], 1216860, 236891),
+            tags = "[purge]",
         }, { -- Arrow Rain
             text = format(L["{spell:%d} is channeled by {npc:%d}."], 1216449, 238035),
             tags = "[creature_stun][creature_incapacitate][creature_grip]",
-        }, { -- Bolstering Flames
-            text = format(L["{spell:%d} buff on {npc:%d}."], 1216860, 236891),
-            tags = "[important][purge]",
         }, { -- Ferocious Pounce
             text = format(L["{spell:%d} is cast by {npc:%d}."], 1217010, 232063),
             tags = "[creature_stun][creature_fear][creature_incapacitate][creature_grip]",
