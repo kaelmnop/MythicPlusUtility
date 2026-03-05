@@ -1,3 +1,3 @@
-## 1.0.4
-# Fixes
-* Fixed Cyrillic not showing properly
+## 1.0.5
+# Localisation
+* Added German localisation. Thanks, Feedy88!
