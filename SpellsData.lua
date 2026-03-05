@@ -67,6 +67,12 @@ MythicPlusUtility.classSpecialisations = {
     },
 }
 
+MythicPlusUtility.utilityAbilitiesRacials = {
+    [20594] = {tags = "[poison][disease][curse][bleed]"}, -- Stoneform
+    [265221] = {tags = "[poison][disease][curse][bleed]"}, -- Fireblood
+    [58984] = {tags = "[targeted_avoid]"}, -- Shadowmeld
+}
+
 MythicPlusUtility.utilityAbilities = {
     DEATHKNIGHT = {
         [111673] = {tags = "[cc_undead]"}, -- Control Undead
