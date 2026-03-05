@@ -38,6 +38,8 @@ MythicPlusUtility.supportedTags = {
     self_only = true, -- Ability that only works on the player
     -- important = true, -- Sets entry as important
     -- super_important = true, -- Sets entry as super important
+    spell_reflect = true, -- Can be spell reflected
+    targeted_avoid = true, -- Targeted ability that can be avoided with FD, Shadowmeld, etc.
 }
 
 MythicPlusUtility.dungeonIdToName = {
