@@ -89,7 +89,7 @@ L["Mitigates effects of {spell:%d} on the last boss {npc:%d}."] =
   "Нивелирует эффекты {spell:%d} на последнем боссе {npc:%d}."
 L["Prevent {npc:%d} from reaching {npc:%d}."] = "Мешает {npc:%d} достичь {npc:%d}."
 L["Prevent {npc:%d} from reaching players or other {npc:%d} on the second boss {npc:%d}."] =
-  "Мешает {npc:%d} достичь игроков или других {npc:%d} на последнем боссе {npc:%d}."
+  "Мешает {npc:%d} достичь игроков или других {npc:%d} на втором боссе {npc:%d}."
 L["Prevent {npc:%d} from reaching the first boss {npc:%d}."] =
   "Мешает {npc:%d} достичь первого босса {npc:%d}."
 L["Slow {npc:%d} on the third boss {npc:%d}."] = "Замедляет {npc:%d} на третьем боссе {npc:%d}."
