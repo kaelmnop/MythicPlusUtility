@@ -7,11 +7,11 @@ MythicPlusUtility.instancesData = {
             text = format(
               L["{spell:%d} debuff is inflicted on the first boss {npc:%d}. Also, this debuff can be avoided."], 388623,
               196482),
-            tags = "[bleed]",
+            tags = "[bleed][physical_debuff]",
         }, { -- Lasher Toxin
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d} on the first boss {npc:%d}."], 389033, 197398,
                           196482),
-            tags = "[poison]",
+            tags = "[poison][magic_debuff]",
         }, { -- Power Vacuum
             text = format(L["Mitigates effects of {spell:%d} on the last boss {npc:%d}."], 388822, 190609),
             tags = "[important][player_jump][player_movement_immune]",
@@ -37,25 +37,25 @@ MythicPlusUtility.instancesData = {
         }, { -- Peck
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d})."], 377344, 192329,
                           191736),
-            tags = "[bleed]",
+            tags = "[bleed][physical_debuff]",
         }, { -- Vile Bite
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d} (trash before {npc:%d})."], 1282244, 197219,
                           196482),
-            tags = "[bleed]",
+            tags = "[bleed][physical_debuff]",
         },
     },
     [2811] = { -- Magisters' Terrace
         -- Boss
         { -- Ethereal Shackles
             text = format(L["{spell:%d} debuff is inflicted by the first boss {npc:%d}."], 1214038, 231861),
-            tags = "[important][slow][root]",
+            tags = "[important][slow][root][magic_debuff]",
         }, { -- Hastening Ward
             text = format(L["{spell:%d} buff on the second boss {npc:%d}."], 1248689, 231863),
             tags = "[important][purge]",
         }, { -- Entropy Orb
             text = format(L["{spell:%d} debuff is inflicted by contact with orbs on the last boss {npc:%d}."], 1269631,
                           231865),
-            tags = "[important][slow][root]",
+            tags = "[important][slow][root][magic_debuff]",
         }, -- Trash
         { -- Arcane Blade
             text = format(L["{spell:%d} buff on {npc:%d}."], 1252909, 234124),
@@ -74,10 +74,10 @@ MythicPlusUtility.instancesData = {
         -- Boss
         { -- Open Wound
             text = format(L["{spell:%d} debuff is inflicted by the first boss {npc:%d}."], 1266488, 247572),
-            tags = "[important][bleed]",
+            tags = "[important][bleed][physical_debuff]",
         }, { -- Infected Pinions
             text = format(L["{spell:%d} debuff is inflicted by the first boss {npc:%d}."], 1246666, 247572),
-            tags = "[disease]",
+            tags = "[disease][magic_debuff]",
         }, { -- Unstable Phantom NPC
             text = format(L["Prevent {npc:%d} from reaching players or other {npc:%d} on the second boss {npc:%d}."],
                           250443, 250443, 248595),
@@ -85,11 +85,11 @@ MythicPlusUtility.instancesData = {
         }, { -- Cries of the Fallen
             text = format(L["{spell:%d} debuff is inflicted by contact with {npc:%d} on the last boss {npc:%d}."],
                           1254175, 1531, 248605),
-            tags = "[important][slow][root]",
+            tags = "[important][slow][root][magic_debuff]",
         }, -- Trash
         { -- Ritual Sacrifice
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1259794, 253683),
-            tags = "[super_important][slow][root]",
+            tags = "[super_important][slow][root][magic_debuff]",
         }, { -- Grim Ward
             text = format(L["{spell:%d} buff on {npc:%d}."], 1270079, 248690),
             tags = "[important][purge]",
@@ -98,11 +98,11 @@ MythicPlusUtility.instancesData = {
             tags = "[enrage]",
         }, { -- Frost Nova
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1271623, 249024),
-            tags = "[slow][root]",
+            tags = "[slow][root][magic_debuff]",
         }, { -- Hooked Snare
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}. Also, this cast can be interrupted."], 1266381,
                           242964),
-            tags = "[slow][root]",
+            tags = "[slow][root][physical_debuff]",
         }, { -- Reanimation
             text = format(L["{spell:%d} is cast by {npc:%d}."], 1257716, 248692),
             tags = "[creature_stun][creature_incapacitate][creature_grip]",
@@ -114,7 +114,7 @@ MythicPlusUtility.instancesData = {
             tags = "[creature_mortal_strike]",
         }, { -- Rending Gore
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1256059, 248678),
-            tags = "[bleed]",
+            tags = "[bleed][physical_debuff]",
         },
     },
     [123] = { -- Nexus-Point Xenas
@@ -125,13 +125,13 @@ MythicPlusUtility.instancesData = {
             tags = "[important][purge]",
         }, { -- Supression Field
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 249081, 241647),
-            tags = "[important][slow][snare]",
+            tags = "[important][slow][snare][magic_debuff]",
         }, { -- Arcane Explosion
             text = format(L["{spell:%d} is channeled by {npc:%d}."], 1285445, 241644),
             tags = "[creature_stun][creature_fear][creature_incapacitate][creature_grip]",
         }, { -- Creeping Void
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1281636, 248706),
-            tags = "[curse]",
+            tags = "[curse][magic_debuff]",
         }, { -- Dusk Frights
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}. Also, this debuff can be avoided."], 1282724,
                           251853),
@@ -151,23 +151,23 @@ MythicPlusUtility.instancesData = {
         -- Boss
         { -- Cryoshards
             text = format(L["{spell:%d} debuff is inflicted by the first boss {npc:%d}."], 1261921, 36494),
-            tags = "[important][slow][snare]",
+            tags = "[important][slow][snare][magic_debuff]",
         }, { -- Shadowbind
             text = format(L["{spell:%d} debuff is inflicted by the second boss {npc:%d}."], 1264186, 36477),
-            tags = "[super_important][slow][snare][curse]",
+            tags = "[super_important][slow][snare][curse][magic_debuff]",
         }, { -- Rotting Strikes
             text = format(L["{spell:%d} debuff is inflicted on the last boss {npc:%d}."], 1262930, 36658),
-            tags = "[disease]",
+            tags = "[disease][physical_debuff]",
         }, -- Trash
         { -- Curse of Torment
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1258434, 252561),
-            tags = "[important][curse]",
+            tags = "[important][curse][magic_debuff]",
         }, { -- Permeating Cold
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1258437, 252566),
-            tags = "[important][slow][snare]",
+            tags = "[important][slow][snare][magic_debuff]",
         }, { -- Plungegrip
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1258997, 252707),
-            tags = "[important][slow][root]",
+            tags = "[important][slow][root][physical_debuff]",
         }, { -- Plungegrip
             text = format(L["{spell:%d} is channeled by {npc:%d}. The caster is immune to CC while it has {spell:%d}"],
                           1258997, 252707),
@@ -180,7 +180,7 @@ MythicPlusUtility.instancesData = {
             tags = "[enrage]",
         }, { -- Rotting Strikes
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1258459, 252558),
-            tags = "[disease]",
+            tags = "[disease][physical_debuff]",
         },
     },
     [1753] = { -- Seat of the Triumvirate
@@ -190,7 +190,7 @@ MythicPlusUtility.instancesData = {
             tags = "[important][creature_root][creature_slow][creature_grip]",
         }, { -- Shadow Pounce
             text = format(L["{spell:%d} debuff is inflicted on the second boss {npc:%d}."], 245742, 122316),
-            tags = "[bleed]",
+            tags = "[bleed][physical_debuff]",
         }, { -- Mind Flay
             text = format(L["{spell:%d} is channeled by {npc:%d} on the third boss {npc:%d}."], 1268733, 122827, 124309),
             tags = "[creature_stun][creature_fear][creature_incapacitate]",
@@ -200,7 +200,7 @@ MythicPlusUtility.instancesData = {
             tags = "[super_important][purge]",
         }, { -- Chains of Subjugation
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1262509, 124171),
-            tags = "[important][slow][snare]",
+            tags = "[important][slow][snare][magic_debuff]",
         }, { -- Devouring Frenzy
             text = format(L["{spell:%d} is cast by {npc:%d}."], 1264678, 255320),
             tags = "[important][creature_mortal_strike]",
@@ -216,7 +216,7 @@ MythicPlusUtility.instancesData = {
         -- Boss
         { -- Fan of Blades
             text = format(L["{spell:%d} debuff is inflicted on the first boss {npc:%d}."], 153757, 75964),
-            tags = "[bleed]",
+            tags = "[bleed][physical_debuff]",
         }, { -- Sunwings npc
             text = format(L["Slow {npc:%d} on the third boss {npc:%d}."], 76227, 76379),
             tags = "[creature_slow][creature_root][creature_grip]",
@@ -226,7 +226,7 @@ MythicPlusUtility.instancesData = {
         }, -- Trash
         { -- Blade Rush
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1254475, 79303),
-            tags = "[important][bleed]",
+            tags = "[important][bleed][physical_debuff]",
         }, { -- Mark of Death
             text = format(L["{spell:%d} is cast by {npc:%d}."], 1254686, 76154),
             tags = "[important][creature_stun][creature_fear][creature_incapacitate]",
@@ -248,7 +248,7 @@ MythicPlusUtility.instancesData = {
         -- Boss
         { -- Curse of Darkness
             text = format(L["{spell:%d} debuff is inflicted by the second boss {npc:%d}."], 1215803, 231626),
-            tags = "[super_important][curse]",
+            tags = "[super_important][curse][magic_debuff]",
         }, { -- Intimidating Shout
             text = format(
               L["{spell:%d} debuff is inflicted by the third boss {npc:%d}. Also, this debuff can be avoided."],
@@ -272,13 +272,13 @@ MythicPlusUtility.instancesData = {
             tags = "[creature_stun][creature_incapacitate][creature_grip]",
         }, { -- Poison Spray
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1216822, 232067),
-            tags = "[poison]",
+            tags = "[poison][magic_debuff]",
         }, { -- Puncturing Bite
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1216985, 232063),
-            tags = "[bleed]",
+            tags = "[bleed][physical_debuff]",
         }, { -- Shred Flesh
             text = format(L["{spell:%d} debuff is inflicted by {npc:%d}."], 1253739, 232283),
-            tags = "[bleed]",
+            tags = "[bleed][physical_debuff]",
         },
     },
 }
