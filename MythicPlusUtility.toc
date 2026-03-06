@@ -6,6 +6,8 @@
 ## Author: Nikyou
 ## SavedVariables: MythicPlusUtilityDB
 ## X-Curse-Project-ID: 1475054
+## X-WoWI-ID: 27073
+## X-Wago-ID: YK9bjwGL
 
 
 # Libraries
