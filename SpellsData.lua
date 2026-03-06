@@ -68,9 +68,9 @@ MythicPlusUtility.classSpecialisations = {
 }
 
 MythicPlusUtility.utilityAbilitiesRacials = {
-    [20594] = {tags = "[poison][disease][curse][bleed]", baseline = true}, -- Stoneform
-    [265221] = {tags = "[poison][disease][curse][bleed]", baseline = true}, -- Fireblood
-    [58984] = {tags = "[targeted_avoid]", baseline = true}, -- Shadowmeld
+    [20594] = {tags = "[poison][disease][curse][bleed]", racial = true}, -- Stoneform
+    [265221] = {tags = "[poison][disease][curse][bleed]", racial = true}, -- Fireblood
+    [58984] = {tags = "[targeted_avoid]", racial = true}, -- Shadowmeld
 }
 
 MythicPlusUtility.utilityAbilities = {
@@ -337,7 +337,7 @@ MythicPlusUtility.utilityAbilities = {
         [107570] = {tags = "[creature_stun]"}, -- Storm Bolt
         [12323] = {tags = "[creature_slow]"}, -- Piercing Howl
         [18499] = {tags = "[self_only][fear][incapacitate]", baseline = true}, -- Berserker Rage
-        --[23920] = {tags = "[spell_reflect]"}, -- Spell Reflection
+        -- [23920] = {tags = "[spell_reflect]"}, -- Spell Reflection
         [384100] = {tags = "[fear]"}, -- Berserker Shout
         [46968] = {tags = "[creature_stun]"}, -- Shockwave
         [5246] = {tags = "[creature_fear]"}, -- Intimidating Shout

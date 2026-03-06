@@ -38,7 +38,7 @@ MythicPlusUtility.supportedTags = {
     self_only = true, -- Ability that only works on the player
     -- important = true, -- Sets entry as important
     -- super_important = true, -- Sets entry as super important
-    spell_reflect = true, -- Can be spell reflected
+    -- spell_reflect = true, -- Can be spell reflected
     targeted_avoid = true, -- Targeted ability that can be avoided with FD, Shadowmeld, etc.
 }
 
@@ -105,7 +105,7 @@ end
 
 function MythicPlusUtility:GetSpellHyperlinkById(spellId)
     local db = self.db.locale
-    if db.spellIdToHyperlink[spellId] and not string.find(db.spellIdToHyperlink[spellId], ":0|h%[%]|h") then
+    if (db.spellIdToHyperlink[spellId]) and (not string.find(db.spellIdToHyperlink[spellId], ":0|h%[%]|h")) then
         return db.spellIdToHyperlink[spellId]
     else
         local spellName = self:GetSpellNameById(spellId)
@@ -150,7 +150,7 @@ end
 
 function MythicPlusUtility:GetNpcHyperlinkById(npcId)
     local db = self.db.locale
-    if db.npcIdToHyperlink[npcId] and not string.find(db.npcIdToHyperlink[npcId], "|h%[%]|h|r") then
+    if (db.npcIdToHyperlink[npcId]) and (not string.find(db.npcIdToHyperlink[npcId], "|h%[%]|h|r")) then
         return db.npcIdToHyperlink[npcId]
     else
         local npcName = self:GetNpcNameById(npcId)
@@ -305,6 +305,13 @@ function MythicPlusUtility:FormatSpellsData(spellId)
                 entry.spellName = self:GetSpellNameById(spellId)
             end
         end
+        for spellId, entry in pairs(self.utilityAbilitiesRacials) do
+            if entry.isKnown then
+                extract(entry)
+                entry.spellId = spellId
+                entry.spellName = self:GetSpellNameById(spellId)
+            end
+        end
     else
         if self.utilityAbilities[self.db.char.class][spellId] then
             extract(self.utilityAbilities[self.db.char.class][spellId])
@@ -317,6 +324,11 @@ function MythicPlusUtility:FormatSpellsData(spellId)
                 self.utilityAbilities[specId][spellId].spellId = spellId
                 self.utilityAbilities[specId][spellId].spellName = self:GetSpellNameById(spellId)
             end
+        end
+        if self.utilityAbilitiesRacials[spellId] and self.utilityAbilitiesRacials[spellId].isKnown then
+            extract(self.utilityAbilitiesRacials[spellId])
+            self.utilityAbilitiesRacials[spellId].spellId = spellId
+            self.utilityAbilitiesRacials[spellId].spellName = self:GetSpellNameById(spellId)
         end
     end
 end
@@ -354,6 +366,10 @@ function MythicPlusUtility:CreateCurrentAbilitiesList()
         if entry.override and entry.isKnown and t[entry.override] then t[entry.override].isOverriden = true end
     end
 
+    for spellId, entry in pairs(self.utilityAbilitiesRacials) do
+        if entry.isKnown then t[spellId] = self:tablecopy(entry) end
+    end
+
     self.currentAbilitiesList = {}
     for _, entry in pairs(t) do table.insert(self.currentAbilitiesList, self:tablecopy(entry)) end
 
@@ -367,7 +383,7 @@ function MythicPlusUtility:UpdateCurrentAbilitiesList(petOnly)
     petOnly = petOnly or false
 
     for _, entry in pairs(self.currentAbilitiesList) do
-        if not (petOnly and entry.pet) then
+        if not (petOnly and entry.pet) and (not entry.racial) then
 
             if not (entry.alternatives and #entry.alternatives > 0) then
                 entry.isKnown = MythicPlusUtility:IsSpellKnownHandler(entry.spellId, entry.pet)
@@ -399,7 +415,7 @@ function MythicPlusUtility:UpdateCurrentAbilitiesList(petOnly)
     end
 
     for _, entry in pairs(self.currentAbilitiesList) do
-        if not (petOnly and entry.pet) then
+        if not (petOnly and entry.pet) and (not entry.racial) then
             if entry.override and entry.isKnown and (self.utilityAbilities[self.db.char.class][entry.override]
               or self.utilityAbilities[self.db.char.currentSpec][entry.override]) then
                 for _, subEntry in pairs(self.currentAbilitiesList) do
@@ -423,7 +439,13 @@ function MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(instance
 
         if not entry.isOverriden then
             if self.instancesData[instanceID] then
+                local hasImportant = false
                 for _, instanceEntry in ipairs(self.instancesData[instanceID]) do
+
+                    if not hasImportant and instanceEntry.tagsTable.important then
+                        hasImportant = true
+                    end
+
                     if not (self.db.profile.hideNotImportant and not instanceEntry.tagsTable.important) then
                         local found = false
                         for tag, _ in pairs(instanceEntry.tagsTable) do
@@ -435,8 +457,10 @@ function MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(instance
 
                         if found then table.insert(entry.list, instanceEntry.formattedText) end
                     end
-
                 end
+
+                entry.hasImportant = hasImportant
+
             end
         end
 

@@ -5,10 +5,11 @@
 * Added more customisation to Utility Window:
     * Background color can be fully customised
     * Show which non baseline abilities to unlearn for this dungeon (can be disabled)
-    * Options for display for abilities above, red hue by default
+    * Options for display for abilities above
     * More options for unlearned abilities
     * More options for needed abilities
     * More options for abilities that contain only not importnant entries
+    * More options for unlearned abilities that contain only not importnant entries
 # New Spells
 * Feign Death (Hunter)
 * Shadowmeld (Night Elf)

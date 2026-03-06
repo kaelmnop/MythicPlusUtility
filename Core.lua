@@ -128,6 +128,9 @@ function MythicPlusUtility:ExtractSpellsFromDB()
     for specId, _ in pairs(self.classSpecialisations[self.db.char.class]) do
         for spellId, entry in pairs(self.utilityAbilities[specId]) do extract(spellId, entry) end
     end
+    for spellId, entry in pairs(MythicPlusUtility.utilityAbilitiesRacials) do
+        if entry.isKnown then extract(spellId, entry) end
+    end
 end
 
 function MythicPlusUtility:PopulateLocalisation()
@@ -146,6 +149,9 @@ function MythicPlusUtility:GetCharacterInfo()
         MythicPlusUtility:ExtractSpellsFromDB()
     end)
 
+    for spellId, entry in pairs(MythicPlusUtility.utilityAbilitiesRacials) do
+        entry.isKnown = self:IsSpellKnownHandler(spellId)
+    end
 end
 
 function MythicPlusUtility:ToggleAbilitiesFrame()
