@@ -433,6 +433,7 @@ end
 function MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(instanceID)
 
     self.buttonsIndices = {}
+    self.buttonsIndicesWithEmpty = {}
 
     for _, entry in ipairs(self.currentAbilitiesList) do
         entry.list = {}
@@ -468,6 +469,11 @@ function MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(instance
 
     for id, entry in ipairs(self.currentAbilitiesList) do
         if entry.list and #entry.list > 0 then table.insert(self.buttonsIndices, id) end
+    end
+    for id, entry in ipairs(self.currentAbilitiesList) do
+        if (entry.list and #entry.list > 0) or (entry.isKnown and not (entry.baseline or entry.racial)) then
+            table.insert(self.buttonsIndicesWithEmpty, id)
+        end
     end
 
 end
