@@ -41,7 +41,7 @@ MythicPlusUtility.supportedTags = {
     -- spell_reflect = true, -- Can be spell reflected
     targeted_avoid = true, -- Targeted ability that can be avoided with FD, Shadowmeld, etc.
 }
-
+MythicPlusUtility.defaultDungeonId = 2526
 MythicPlusUtility.dungeonIdToName = {
     [2526] = L["Algeth\'ar Academy"],
     [2811] = L["Magisters\' Terrace"],
@@ -54,6 +54,8 @@ MythicPlusUtility.dungeonIdToName = {
 }
 
 MythicPlusUtility.npcIdToEncounterSectionId = {[76227] = 33940}
+
+MythicPlusUtility.fontList = {}
 
 function MythicPlusUtility:IsSpellKnownHandler(spellId, isPet)
     isPet = isPet or false

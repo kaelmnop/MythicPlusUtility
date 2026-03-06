@@ -15,9 +15,66 @@ MythicPlusUtility.defaults = {
         textFontSize = 12,
         dungeonNameSize = 20,
         hideNotImportant = false,
-        instanceID = 2526,
+        instanceID = MythicPlusUtility.defaultDungeonId,
         selectFramePoint = "TOPLEFT",
         difficultyID = {[1] = false, [2] = false, [23] = true},
+
+        buttonCosmetic = {
+            ['**'] = {
+                enabled = true,
+                iconDesaturate = false,
+                iconColor = {r = 255, g = 255, b = 255, a = 1},
+                iconGlow = false,
+                iconGlowColor = {r = 255, g = 255, b = 255, a = 1},
+                label = "",
+                labelKey = "default",
+                labelList = {},
+                labelListOrder = {"default", "defaultText", "none", "custom"},
+                isCustom = false,
+                labelFont = "",
+                labelSize = 12,
+                labelColor = {r = 0, g = 0, b = 0, a = 1},
+                customLabelType = "text",
+                customLabelTypeList = {text = L["Text"], atlas = L["AtlasID Texture"], icon = L["Icon"]},
+                customLabelTypeListOrder = {"text", "icon", "atlas"},
+                customLabelText = "",
+                customLabelAtlas = "",
+                customLabelAtlasFormatted = "",
+                customLabelIcon = "",
+                customLabelIconFormatted = "",
+            },
+            unlearnAbility = {
+                iconColor = {r = 255, g = 0, b = 0, a = 1},
+                iconGlowColor = {r = 255, g = 0, b = 0, a = 1},
+                label = "-",
+                labelList = {default = "-", defaultText = L["Remove"], none = L["None"], custom = L["Custom"]},
+                labelColor = {r = 255, g = 0, b = 0, a = 1},
+            },
+            needAbility = {
+                iconDesaturate = true,
+                iconGlowColor = {r = 0, g = 255, b = 0, a = 1},
+                label = "+",
+                labelList = {default = "+", defaultText = L["Add"], none = L["None"], custom = L["Custom"]},
+                labelColor = {r = 0, g = 255, b = 0, a = 1},
+            },
+            onlyNotImportantAbility = {
+                iconGlowColor = {r = 255, g = 255, b = 0, a = 1},
+                label = "?",
+                labelList = {default = "?", defaultText = L["Optional"], none = L["None"], custom = L["Custom"]},
+                labelColor = {r = 255, g = 255, b = 0, a = 1},
+            },
+            NeedOnlyNotImportantAbility = {
+                iconGlowColor = {r = 191, g = 255, b = 0, a = 1},
+                label = "+?",
+                labelList = {default = "+?", defaultText = L["Add Optional"], none = L["None"], custom = L["Custom"]},
+                labelColor = {r = 191, g = 255, b = 0, a = 1},
+            },
+            learnedAbility = {
+                enabled = false,
+                label = "✓",
+                labelList = {default = "✓", defaultText = L["Known"], none = L["None"], custom = L["Custom"]},
+            },
+        },
     },
 }
 
@@ -183,10 +240,6 @@ MythicPlusUtility.options = {
                     MythicPlusUtility.Frame.background:SetColorTexture(r, g, b, a)
                 end
             end,
-            min = 0,
-            max = 1,
-            step = 0.01,
-            bigStep = 0.1,
         },
         hideOnStart = {
             type = "toggle",
@@ -217,18 +270,102 @@ MythicPlusUtility.options = {
             type = "select",
             order = 11,
             name = L["Dungeon Preview"],
-            get = "GetValue",
-            set = "SetValueChangeInstance",
+            get = "GetValueInstance",
+            set = "SetValueInstance",
             sorting = {2526, 2811, 2874, 123, 658, 1753, 1209, 2805},
-            values = {
-                [2526] = MythicPlusUtility.dungeonIdToName[2526],
-                [2811] = MythicPlusUtility.dungeonIdToName[2811],
-                [2874] = MythicPlusUtility.dungeonIdToName[2874],
-                [123] = MythicPlusUtility.dungeonIdToName[123],
-                [658] = MythicPlusUtility.dungeonIdToName[658],
-                [1753] = MythicPlusUtility.dungeonIdToName[1753],
-                [1209] = MythicPlusUtility.dungeonIdToName[1209],
-                [2805] = MythicPlusUtility.dungeonIdToName[2805],
+            values = MythicPlusUtility.dungeonIdToName,
+        },
+        buttonCosmeticGroup = {
+            type = "group",
+            childGroups = "tree",
+            order = 3,
+            name = L["Icon Cosmetics Settings"],
+            args = {
+                learnedAbility = {
+                    type = "group",
+                    inline = "true",
+                    order = 1,
+                    name = L[""],
+                    get = "GetValueButtonCosmetic",
+                    set = "SetValueButtonCosmetic",
+                    args = {
+                        enabled = {type = "toggle", order = 1, name = L["Enable"]},
+                        iconDesaturate = {type = "toggle", order = 2, name = L["Desaturate"]},
+                        iconColor = {
+                            type = "color",
+                            desc = L["Set as white (#FFFFFF) to not change icon color"],
+                            order = 3,
+                            name = L["Icon Color"],
+                            get = "GetValueButtonCosmeticColor",
+                            set = "SetValueButtonCosmeticColor",
+                        },
+                        iconGlow = {type = "toggle", order = 4, name = L["Enable Icon Glow"]},
+                        -- iconGlowColor = ,
+                        -- label = "",
+                        -- labelKey = "default",
+                        labelList = {
+                            type = "select",
+                            order = 6,
+                            name = L["Shown Text"],
+                            get = "GetValueButtonCosmeticTextType",
+                            set = "SetValueButtonCosmeticTextType",
+                            sorting = MythicPlusUtility.db.profile.buttonCosmetic.learnedAbility.labelListOrder,
+                            values = MythicPlusUtility.db.profile.buttonCosmetic.learnedAbility.labelList,
+                        },
+                        -- isCustom = false,
+                        labelFont = {
+                            type = "select",
+                            order = 7,
+                            name = L["Font"],
+                            get = "GetValueButtonCosmeticFont",
+                            set = "SetValueButtonCosmeticFont",
+                            values = MythicPlusUtility.fontList,
+                        },
+                        labelSize = {
+                            type = "range",
+                            order = 8,
+                            name = L["Text Size"],
+                            min = 1,
+                            softMin = 5,
+                            softMax = 40,
+                            step = 1,
+                        },
+                        labelColor = {
+                            type = "color",
+                            order = 9,
+                            name = L["Text Color"],
+                            get = "GetValueButtonCosmeticColor",
+                            set = "SetValueButtonCosmeticColor",
+                        },
+                        customLabelType = {
+                            type = "select",
+                            order = 10,
+                            name = L["Custom Text Type"],
+                            get = "GetValueButtonCosmeticTextType",
+                            set = "SetValueButtonCosmeticTextType",
+                            sorting = MythicPlusUtility.db.profile.buttonCosmetic.learnedAbility
+                              .customLabelTypeListOrder,
+                            values = MythicPlusUtility.db.profile.buttonCosmetic.learnedAbility.customLabelTypeList,
+                        },
+                        customLabelText = {type = "input", order = 11, name = L["Custom Text"]},
+                        customLabelIcon = {
+                            type = "input",
+                            order = 11,
+                            name = L["Custom Icon Texture"],
+                            desc = L["Write Icon Id here, multiple ids can be entered with ; delimenter."],
+                            set = "SetValueButtonCosmeticCustomIcon",
+                        },
+                        -- customLabelIconFormatted = "",
+                        customLabelAtlas = {
+                            type = "input",
+                            order = 11,
+                            name = L["Custom Atlas Texture"],
+                            desc = L["Write Atlas Name here, multiple names can be entered with ; delimenter. I recommend finding Atlas Names with TextureAtlasViewer addon."],
+                            set = "SetValueButtonCosmeticCustomAtlas",
+                        },
+                        -- customLabelAtlasFormatted = "",
+                    },
+                },
             },
         },
     },
@@ -251,8 +388,12 @@ function MythicPlusUtility:SetValueUpdateButtonSize(info, value)
     if self.Frame then self.Frame:UpdateButtonSize() end
 end
 
-function MythicPlusUtility:SetValueChangeInstance(info, value)
-    self.db.profile[info[#info]] = value
+function MythicPlusUtility:GetValueInstance(info)
+    return self.dungeonIdToName[self.db.profile.instanceID] and self.db.profile.instanceID or self.defaultDungeonId
+end
+
+function MythicPlusUtility:SetValueInstance(info, value)
+    self.db.profile.instanceID = value
     if self.Frame then self.Frame:ChangeInstance() end
 end
 
