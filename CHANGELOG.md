@@ -2,7 +2,6 @@
 # New Features
 * Racials support
 * Targeted Spell Avoid mechanic support
-* Spell Reflect mechanic support
 * Added more customisation to Utility Window:
     * Background color can be fully customised
     * Show which non baseline abilities to unlearn for this dungeon (can be disabled)
@@ -13,7 +12,6 @@
 # New Spells
 * Feign Death (Hunter)
 * Shadowmeld (Night Elf)
-* Spell Reflection (Warrior)
 * Stone Form  (Dwarf)
 * Vanish (Rogue)
 * Void Nova (Devourer Demon Hunter)
