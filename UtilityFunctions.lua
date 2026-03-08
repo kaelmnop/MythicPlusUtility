@@ -33,6 +33,7 @@ MythicPlusUtility.supportedTags = {
     root = true, --  Removable root effect
     snare = true, -- Removable snare effect
     stealth = true, -- Removable stealth effect
+    stun = true, -- Removable stun effect
     player_jump = true, -- Mechanic that can be prevented by player using "jump" ability
     player_movement_immune = true, -- Mechanic that can be prevented by player using immunity to forced movement
     self_only = true, -- Ability that only works on the player

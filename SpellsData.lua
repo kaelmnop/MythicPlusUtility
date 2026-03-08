@@ -83,6 +83,7 @@ MythicPlusUtility.utilityAbilities = {
         [454786] = {tags = "[creature_slow][creature_root]", override = 45524}, -- Ice Prison
         [45524] = {tags = "[creature_slow]", baseline = true}, -- Chains of Ice
         [48265] = {tags = "[self_only][player_movement_immune]", baseline = true}, -- Death's Advance
+        [48792] = {tags = "[self_only][stun]", baseline = true}, -- Icebound Fortitude
         [49039] = {tags = "[self_only][charm][fear][sleep]", baseline = true}, -- Lichborne
         [49576] = {tags = "[creature_grip]", baseline = true}, -- Death Grip
     },
