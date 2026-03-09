@@ -65,12 +65,14 @@ MythicPlusUtility.globals = {
     onlyNotImportantAbility = {
         labelList = {default = "\"?\"", defaultText = L["\"Optional\""], none = L["None"], custom = L["Custom"]},
     },
-    NeedOnlyNotImportantAbility = {
+    needOnlyNotImportantAbility = {
         labelList = {default = "\"+?\"", defaultText = L["\"Add Optional\""], none = L["None"], custom = L["Custom"]},
     },
     learnedAbility = {
         labelList = {default = "\"*\"", defaultText = L["\"Known\""], none = L["None"], custom = L["Custom"]},
     },
+    iconGlowTypeList = {pixel = L["Pixel Glow"], autocast = L["Autocast Shine"], button = L["Action Button Glow"]},
+    iconGlowTypeListOrder = {"pixel", "autocast", "button"},
 }
 
 MythicPlusUtility.npcIdToEncounterSectionId = {[76227] = 33940}

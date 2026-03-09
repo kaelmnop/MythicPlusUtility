@@ -24,9 +24,23 @@ MythicPlusUtility.defaults = {
             ['**'] = {
                 enabled = true,
                 iconDesaturate = false,
-                iconColor = {r = 255, g = 255, b = 255, a = 1},
+                iconColor = {r = 1, g = 1, b = 1, a = 1},
                 iconGlow = false,
-                iconGlowColor = {r = 255, g = 255, b = 255, a = 1},
+                iconGlowType = "pixel",
+                iconGlowColor = {r = 1, g = 1, b = 1, a = 1},
+                glowPixelN = 8,
+                glowPixelFrequency = 0.25,
+                glowPixelLength = 0,
+                glowPixelTh = 2,
+                glowPixelXOffset = 0,
+                glowPixelYOffset = 0,
+                glowPixelBorder = false,
+                glowAutocastN = 4,
+                glowAutocastFrequency = 0.125,
+                glowAutocastScale = 1,
+                glowAutocastXOffset = 0,
+                glowAutocastYOffset = 0,
+                glowButtonFrequency = 0.125,
                 label = "",
                 labelType = "default",
                 isCustom = false,
@@ -46,26 +60,26 @@ MythicPlusUtility.defaults = {
                 customLabelIconFormatted = "",
             },
             unlearnAbility = {
-                iconColor = {r = 255, g = 0, b = 0, a = 1},
-                iconGlowColor = {r = 255, g = 0, b = 0, a = 1},
+                iconColor = {r = 1, g = 0, b = 0, a = 1},
+                iconGlowColor = {r = 1, g = 0, b = 0, a = 1},
                 label = "-",
-                labelColor = {r = 255, g = 0, b = 0, a = 1},
+                labelColor = {r = 1, g = 0, b = 0, a = 1},
             },
             needAbility = {
                 iconDesaturate = true,
-                iconGlowColor = {r = 0, g = 255, b = 0, a = 1},
+                iconGlowColor = {r = 0, g = 1, b = 0, a = 1},
                 label = "+",
-                labelColor = {r = 0, g = 255, b = 0, a = 1},
+                labelColor = {r = 0, g = 1, b = 0, a = 1},
             },
             onlyNotImportantAbility = {
-                iconGlowColor = {r = 255, g = 255, b = 0, a = 1},
+                iconGlowColor = {r = 1, g = 1, b = 0, a = 1},
                 label = "?",
-                labelColor = {r = 255, g = 255, b = 0, a = 1},
+                labelColor = {r = 1, g = 1, b = 0, a = 1},
             },
-            NeedOnlyNotImportantAbility = {
-                iconGlowColor = {r = 191, g = 255, b = 0, a = 1},
+            needOnlyNotImportantAbility = {
+                iconGlowColor = {r = 0.75, g = 1, b = 0, a = 1},
                 label = "+?",
-                labelColor = {r = 191, g = 255, b = 0, a = 1},
+                labelColor = {r = 0.75, g = 1, b = 0, a = 1},
             },
             learnedAbility = {enabled = false, label = "*"},
         },
@@ -299,6 +313,7 @@ MythicPlusUtility.options = {
                             get = "GetValueButtonCosmeticColor",
                             set = "SetValueButtonCosmeticColor",
                         },
+                        -- Glow Settings
                         glowBreakLine = {
                             type = "header",
                             order = 2,
@@ -312,15 +327,161 @@ MythicPlusUtility.options = {
                             width = 0.8,
                             hidden = "ButtonCosmeticHide",
                         },
+                        iconGlowType = {
+                            type = "select",
+                            order = 2.2,
+                            name = L["Glow Type"],
+                            width = 0.8,
+                            hidden = "ButtonCosmeticHide",
+                            sorting = MythicPlusUtility.globals.glowTypeOrder,
+                            values = MythicPlusUtility.globals.glowType,
+                        },
                         iconGlowColor = {
                             type = "color",
-                            order = 2.2,
+                            order = 2.3,
                             name = L["Glow Color"],
                             width = 0.8,
                             hidden = "ButtonCosmeticHide",
                             get = "GetValueButtonCosmeticColor",
                             set = "SetValueButtonCosmeticColor",
                         },
+
+                        -- Pixel Glow
+                        glowPixelN = {
+                            type = "range",
+                            order = 2.4,
+                            name = L["Number of lines"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            min = 1,
+                            softMin = 1,
+                            softMax = 20,
+                            step = 1,
+                        },
+                        glowPixelFrequency = {
+                            type = "range",
+                            order = 2.5,
+                            name = L["Frequency"],
+                            desc = L["Set to negative to inverse direction of rotation"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            softMin = -1,
+                            softMax = 1,
+                            bigStep = 0.05,
+                        },
+                        glowPixelLength = {
+                            type = "range",
+                            order = 2.6,
+                            name = L["Length of lines"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            min = 0,
+                            softMax = 20,
+                            step = 1,
+                        },
+                        glowPixelTh = {
+                            type = "range",
+                            order = 2.7,
+                            name = L["Thickness of lines"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            min = 0,
+                            softMax = 20,
+                            step = 1,
+                        },
+                        glowPixelXOffset = {
+                            type = "range",
+                            order = 2.8,
+                            name = L["X Offset"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            softMin = -10,
+                            softMax = 10,
+                            step = 1,
+                        },
+                        glowPixelYOffset = {
+                            type = "range",
+                            order = 2.9,
+                            name = L["Y Offset"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            softMin = -10,
+                            softMax = 10,
+                            step = 1,
+                        },
+                        glowPixelBorder = {
+                            type = "toggle",
+                            order = 2.91,
+                            name = L["Border"],
+                            width = 0.8,
+                            hidden = "ButtonCosmeticHide",
+                        },
+                        -- Autocast Glow
+                        glowAutocastN = {
+                            type = "range",
+                            order = 2.4,
+                            name = L["Number of lines"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            min = 1,
+                            softMin = 1,
+                            softMax = 20,
+                            step = 1,
+                        },
+                        glowAutocastFrequency = {
+                            type = "range",
+                            order = 2.5,
+                            name = L["Frequency"],
+                            desc = L["Set to negative to inverse direction of rotation"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            softMin = -1,
+                            softMax = 1,
+                            bigStep = 0.005,
+                        },
+                        glowAutocastScale = {
+                            type = "range",
+                            order = 2.6,
+                            name = L["Scale"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            min = 0,
+                            softMax = 10,
+                            step = 1,
+                        },
+                        glowAutocastXOffset = {
+                            type = "range",
+                            order = 2.7,
+                            name = L["X Offset"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            softMin = -10,
+                            softMax = 10,
+                            step = 1,
+                        },
+                        glowAutocastYOffset = {
+                            type = "range",
+                            order = 2.8,
+                            name = L["Y Offset"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            softMin = -10,
+                            softMax = 10,
+                            step = 1,
+                        },
+                        -- Button Glow
+                        glowButtonFrequency = {
+                            type = "range",
+                            order = 2.4,
+                            name = L["Frequency"],
+                            width = 0.7,
+                            hidden = "ButtonCosmeticHide",
+                            softMin = -1,
+                            softMax = 1,
+                            bigStep = 0.005,
+                        },
+
+                        -- Text Settings
                         labelBreakLine = {
                             type = "header",
                             order = 3,
@@ -337,7 +498,6 @@ MythicPlusUtility.options = {
                             sorting = MythicPlusUtility.globals.labelListOrder,
                             values = MythicPlusUtility.globals.learnedAbility.labelList,
                         },
-                        -- isCustom = false,
                         labelSize = {
                             type = "range",
                             order = 3.2,
@@ -380,6 +540,7 @@ MythicPlusUtility.options = {
                             hidden = "ButtonCosmeticHide",
                             values = LSM:HashTable("font"),
                         },
+                        -- Shadow
                         labelShadowBreakLine = {
                             type = "header",
                             order = 4,
@@ -422,6 +583,7 @@ MythicPlusUtility.options = {
                             softMax = 10,
                             step = 1,
                         },
+                        -- Custom Label
                         customLabelBreakLine = {
                             type = "header",
                             order = 5,
@@ -536,6 +698,12 @@ function MythicPlusUtility:SetValueButtonCosmetic(info, value)
         elseif name == "customLabelType" or name == "customLabelText" or name == "customLabelIcon" or name
           == "customLabelAtlas" then
             -- update text and layout
+        elseif name == 'iconGlow' or name == 'iconGlowType' or name == 'glowPixelN' or name == 'glowPixelFrequency'
+          or name == 'glowPixelLength' or name == 'glowPixelTh' or name == 'glowPixelXOffset' or name
+          == 'glowPixelYOffset' or name == 'glowPixelBorder' or name == 'glowAutocastN' or name
+          == 'glowAutocastFrequency' or name == 'glowAutocastScale' or name == 'glowAutocastXOffset' or name
+          == 'glowAutocastYOffset' or name == 'glowButtonFrequency' then
+            -- update glow function
         end
 
     end
@@ -567,21 +735,36 @@ function MythicPlusUtility:ButtonCosmeticHide(info)
     local db = self.db.profile.buttonCosmetic[info[#info - 1]]
     local enabled = not db.enabled
 
-    if name == "iconGlowColor" then
+    if name == "iconGlowColor" or name == "iconGlowType" then
         return enabled or not db.iconGlow
+
     elseif name == "labelFont" or name == "labelSize" or name == "labelColor" or name == "labelOutline" or name
       == "labelShadowBreakLine" or name == "labelShadow" then
         return enabled or db.labelType == "none"
+
     elseif name == "labelShadowX" or name == "labelShadowY" or name == "labelShadowColor" then
         return enabled or db.labelType == "none" or not db.labelShadow
+
+    elseif name == 'glowPixelN' or name == 'glowPixelFrequency' or name == 'glowPixelLength' or name == 'glowPixelTh'
+      or name == 'glowPixelXOffset' or name == 'glowPixelYOffset' or name == 'glowPixelBorder' then
+        return enabled or not db.iconGlow or db.iconGlowType ~= "pixel"
+
+    elseif name == 'glowAutocastN' or name == 'glowAutocastFrequency' or name == 'glowAutocastScale' or name
+      == 'glowAutocastXOffset' or name == 'glowAutocastYOffset' then
+        return enabled or not db.iconGlow or db.iconGlowType ~= "autocast"
+
     elseif name == "customLabelBreakLine" or name == "customLabelType" then
         return enabled or not db.isCustom
+
     elseif name == "customLabelText" then
         return enabled or not db.isCustom or db.customLabelType ~= "text"
+
     elseif name == "customLabelIcon" then
         return enabled or not db.isCustom or db.customLabelType ~= "icon"
+
     elseif name == "customLabelAtlas" then
         return enabled or not db.isCustom or db.customLabelType ~= "atlas"
+
     end
 
     return enabled

@@ -48,7 +48,8 @@ L["Custom Text"] = true
 L["Custom Icon Texture"] = true
 L["Write Icon Id here, multiple ids can be entered with ; delimenter."] = true
 L["Custom Atlas Texture"] = true
-L["Write Atlas Name here, multiple names can be entered with ; delimenter. I recommend finding Atlas Names with TextureAtlasViewer addon."] = true
+L["Write Atlas Name here, multiple names can be entered with ; delimenter. I recommend finding Atlas Names with TextureAtlasViewer addon."] =
+  true
 L["Glow Color"] = true
 L["Glow Settings"] = true
 L["Text Settings"] = true
@@ -57,6 +58,9 @@ L["Outline"] = true
 L["Shadow Settings"] = true
 L["Shadow Color"] = true
 L["Desaturate Icon"] = true
+L["Pixel Glow"] = true
+L["Autocast Shine"] = true
+L["Action Button Glow"] = true
 
 -- Difficulty
 L["Normal"] = true
