@@ -8,7 +8,7 @@ function MythicPlusUtility:OnInitialize()
     AC:RegisterOptionsTable("MythicPlusUtility_Options", self.options)
 
     self.optionsFrame = ACD:AddToBlizOptions("MythicPlusUtility_Options", "Mythic Plus Utility")
-    ACD:SetDefaultSize("MythicPlusUtility_Options", 800, 620)
+    ACD:SetDefaultSize("MythicPlusUtility_Options", 800, 630)
 
     -- adds a child options table, in this case our profiles panel
     local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)

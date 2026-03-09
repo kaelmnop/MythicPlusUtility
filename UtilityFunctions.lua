@@ -71,8 +71,9 @@ MythicPlusUtility.globals = {
     learnedAbility = {
         labelList = {default = "\"*\"", defaultText = L["\"Known\""], none = L["None"], custom = L["Custom"]},
     },
-    iconGlowTypeList = {pixel = L["Pixel Glow"], autocast = L["Autocast Shine"], button = L["Action Button Glow"]},
-    iconGlowTypeListOrder = {"pixel", "autocast", "button"},
+    iconGlowTypeList = {pixel = L["Pixel Glow"], autocast = L["Autocast Shine"], action = L["Action Button Glow"]},
+    iconGlowTypeListOrder = {"pixel", "autocast", "action"},
+    maxValue =  2147483640 -- Little less than Integer Limit
 }
 
 MythicPlusUtility.npcIdToEncounterSectionId = {[76227] = 33940}
