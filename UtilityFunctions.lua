@@ -54,9 +54,26 @@ MythicPlusUtility.dungeonIdToName = {
     [2805] = L["Windrunner Spire"],
 }
 
-MythicPlusUtility.npcIdToEncounterSectionId = {[76227] = 33940}
+MythicPlusUtility.globals = {
+    labelListOrder = {"default", "defaultText", "custom", "none"},
+    customLabelTypeListOrder = {"text", "icon", "atlas"},
+    customLabelTypeList = {text = L["Text"], atlas = L["AtlasID Texture"], icon = L["Icon"]},
+    unlearnAbility = {
+        labelList = {default = "\"-\"", defaultText = L["\"Remove\""], none = L["None"], custom = L["Custom"]},
+    },
+    needAbility = {labelList = {default = "\"+\"", defaultText = L["\"Add\""], none = L["None"], custom = L["Custom"]}},
+    onlyNotImportantAbility = {
+        labelList = {default = "\"?\"", defaultText = L["\"Optional\""], none = L["None"], custom = L["Custom"]},
+    },
+    NeedOnlyNotImportantAbility = {
+        labelList = {default = "\"+?\"", defaultText = L["\"Add Optional\""], none = L["None"], custom = L["Custom"]},
+    },
+    learnedAbility = {
+        labelList = {default = "\"*\"", defaultText = L["\"Known\""], none = L["None"], custom = L["Custom"]},
+    },
+}
 
-MythicPlusUtility.fontList = {}
+MythicPlusUtility.npcIdToEncounterSectionId = {[76227] = 33940}
 
 function MythicPlusUtility:IsSpellKnownHandler(spellId, isPet)
     isPet = isPet or false

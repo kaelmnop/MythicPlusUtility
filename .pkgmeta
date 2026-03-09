@@ -14,6 +14,8 @@ externals:
   Libs/LibDataBroker-1.1: https://github.com/tekkub/libdatabroker-1-1
   Libs/LibDBIcon-1.0: https://repos.curseforge.com/wow/libdbicon-1-0/trunk/LibDBIcon-1.0
   Libs/LibStub: https://repos.curseforge.com/wow/libstub/trunk
+  Libs/LibSharedMedia-3.0: https://repos.curseforge.com/wow/libsharedmedia-3-0/trunk/LibSharedMedia-3.0
+  Libs/LibCustomGlow-1.0: https://github.com/Stanzilla/LibCustomGlow
 
 manual-changelog:
   filename: CHANGELOG.md
