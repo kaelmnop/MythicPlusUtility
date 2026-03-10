@@ -1,4 +1,6 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("MythicPlusUtility")
 local ACR = LibStub("AceConfigRegistry-3.0")
+local LCG = LibStub("LibCustomGlow")
 
 local function AddLinkTooltip(widget, link)
     if not link then return end
@@ -12,7 +14,56 @@ local function AddLinkTooltip(widget, link)
     end)
 
     widget:SetScript("OnLeave", function() GameTooltip:Hide() end)
+end
 
+local function CalculateCoords(frame, framePoint)
+    local left = frame:GetLeft()
+    local top = frame:GetTop()
+    local screenWidth = GetScreenWidth()
+    local screenHeight = GetScreenHeight()
+    local x = 0
+    local y = 0
+
+    if framePoint == "TOPLEFT" then
+        x = Round(left)
+        y = Round(top - screenHeight)
+    elseif framePoint == "TOP" then
+        x = Round(left - (screenWidth / 2))
+        y = Round(top - screenHeight)
+    elseif framePoint == "TOPRIGHT" then
+        x = Round(left - screenWidth)
+        y = Round(top - screenHeight)
+    elseif framePoint == "LEFT" then
+        x = Round(left)
+        y = Round(top - (screenHeight / 2))
+    elseif framePoint == "CENTER" then
+        x = Round(left - (screenWidth / 2))
+        y = Round(top - (screenHeight / 2))
+    elseif framePoint == "RIGHT" then
+        x = Round(left - screenWidth)
+        y = Round(top - (screenHeight / 2))
+    elseif framePoint == "BOTTOMLEFT" then
+        x = Round(left)
+        y = Round(top)
+    elseif framePoint == "BOTTOM" then
+        x = Round(left - (screenWidth / 2))
+        y = Round(top)
+    elseif framePoint == "BOTTOMRIGHT" then
+        x = Round(left - screenWidth)
+        y = Round(top)
+    end
+
+    return x, y
+end
+
+local function ApplyGlowToFrame(frame, db, type)
+    if type == "pixel" then
+        LCG:PixelGlow_Start(frame, db.iconGlowColor, db.glowPixelN, db.glowPixelFrequency, db.glowPixelLength,
+                            db.glowPixelTh, db.glowPixelXOffset, db.glowPixelYOffset, db.glowPixelBorder)
+        frame.Glow_Stop = LCG.PixelGlow_Stop
+    elseif type == "autocast" then
+    elseif type == "action" then
+    end
 end
 
 function MythicPlusUtility:UtilityAbilitiesFrame()
@@ -25,6 +76,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
     local db = self.db
     local profile = self.db.profile
+    local buttonCosmetic = self.db.profile.buttonCosmetic
 
     self:PopulateCurrentAbilitiesListWithInstanceData(profile.instanceID)
 
@@ -46,44 +98,9 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
     frame:SetScript("OnDragStop", function(self)
         self:StopMovingOrSizing()
-        local left = self:GetLeft()
-        local top = self:GetTop()
-        local screenWidth = GetScreenWidth()
-        local screenHeight = GetScreenHeight()
-        local x = 0
-        local y = 0
-
         local framePoint = profile.selectFramePoint
+        local x, y = CalculateCoords(self, framePoint)
         self:ClearAllPoints()
-
-        if framePoint == "TOPLEFT" then
-            x = Round(left)
-            y = Round(top - screenHeight)
-        elseif framePoint == "TOP" then
-            x = Round(left - (screenWidth / 2))
-            y = Round(top - screenHeight)
-        elseif framePoint == "TOPRIGHT" then
-            x = Round(left - screenWidth)
-            y = Round(top - screenHeight)
-        elseif framePoint == "LEFT" then
-            x = Round(left)
-            y = Round(top - (screenHeight / 2))
-        elseif framePoint == "CENTER" then
-            x = Round(left - (screenWidth / 2))
-            y = Round(top - (screenHeight / 2))
-        elseif framePoint == "RIGHT" then
-            x = Round(left - screenWidth)
-            y = Round(top - (screenHeight / 2))
-        elseif framePoint == "BOTTOMLEFT" then
-            x = Round(left)
-            y = Round(top)
-        elseif framePoint == "BOTTOM" then
-            x = Round(left - (screenWidth / 2))
-            y = Round(top)
-        elseif framePoint == "BOTTOMRIGHT" then
-            x = Round(left - screenWidth)
-            y = Round(top)
-        end
 
         profile.frameXOffset = x
         profile.frameYOffset = y
@@ -230,6 +247,33 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 end
 
             else
+
+                local buttonType
+                if #currentAbility.list > 0 then
+                    if currentAbility.isKnown then
+                        if currentAbility.hasImportant or not buttonCosmetic.onlyNotImportantAbility.enabled then
+                            buttonType = "learnedAbility"
+                        else
+                            buttonType = "onlyNotImportantAbility"
+                        end
+                    else
+                        if currentAbility.hasImportant or not buttonCosmetic.needOnlyNotImportantAbility.enabled then
+                            buttonType = "needAbility"
+                        else
+                            buttonType = "needOnlyNotImportantAbility"
+                        end
+                    end
+                else
+                    buttonType = "unlearnAbility"
+                end
+
+                local enabled = false
+                local cosmeticDB
+                if buttonType and buttonCosmetic[buttonType].enabled then
+                    enabled = true
+                    cosmeticDB = buttonCosmetic[buttonType]
+                end
+
                 local button = CreateFrame("Button", nil, self)
                 button:SetSize(profile.buttonSize, profile.buttonSize)
 
@@ -237,17 +281,26 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 texture:SetAllPoints()
                 texture:SetTexture(MythicPlusUtility:GetSpellIconById(spellId))
 
-                if not currentAbility.isKnown then
+                if enabled and cosmeticDB.iconDesaturate then
                     texture:SetDesaturated(true)
                 else
                     texture:SetDesaturated(false)
+                end
+                if enabled and cosmeticDB.iconColor then
+                    texture:SetVertexColor(cosmeticDB.iconColor.r, cosmeticDB.iconColor.g, cosmeticDB.iconColor.b,
+                                           cosmeticDB.iconColor.a)
+                end
+
+                if enabled and cosmeticDB.iconGlow then
+                    ApplyGlowToFrame(button, cosmeticDB, cosmeticDB.iconGlowType)
                 end
 
                 button.texture = texture
                 button.list = MythicPlusUtility:tablecopy(currentAbility.list)
 
                 local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-                label:SetPoint("TOPLEFT", button, "RIGHT", 10, Round(profile.labelFontSize / 2))
+                -- label:SetPoint("TOPLEFT", button, "RIGHT", 10, Round(profile.labelFontSize / 2))
+                label:SetPoint("LEFT", button, "RIGHT", 10)
                 label:SetJustifyH("LEFT")
                 label:SetWordWrap(true)
                 label:SetWidth(profile.frameWidth - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 5)
@@ -260,8 +313,23 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 label:SetText(name)
 
                 button.label = label
-
                 AddLinkTooltip(button, MythicPlusUtility:GetSpellHyperlinkById(spellId))
+
+                local labelLeft = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                labelLeft:SetPoint("RIGHT", button, "LEFT", 1)
+                labelLeft:SetJustifyH("RIGHT")
+
+                labelLeft:SetWidth(profile.frameWidth - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 5)
+                labelLeft:SetWordWrap(true)
+                labelLeft:SetFont("Fonts\\FRIZQT__.TTf", profile.labelFontSize, nil)
+
+                local name = currentAbility.spellName
+                if currentAbility.tagsTable.self_only then
+                    name = CreateAtlasMarkup("friendslist-recentallies-yellow") .. name
+                end
+                labelLeft:SetText(name)
+
+                button.labelLeft = labelLeft
 
                 local listFrame = CreateFrame("Frame", nil, self)
                 listFrame:SetWidth(1)
@@ -306,17 +374,21 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
     end
 
-    function frame:UpdateButtonSize()
+    function frame:UpdateButtonSize(updateLayout)
+        updateLayout = updateLayout or true
+
         if #self.buttons > 0 then
             for _, button in ipairs(self.buttons) do
                 button:SetSize(profile.buttonSize, profile.buttonSize)
                 button.label:SetWidth(profile.frameWidth - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 5)
             end
-            self:UpdateLayout()
+            if updateLayout then self:UpdateLayout() end
         end
     end
 
-    function frame:UpdateFont()
+    function frame:UpdateFont(updateLayout)
+        updateLayout = updateLayout or true
+
         self.dungeonNameText:SetFont("Fonts\\FRIZQT__.TTf", profile.dungeonNameSize, nil)
         self.listEmptyText:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
         if #self.buttons > 0 then
@@ -328,10 +400,12 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 end
             end
         end
-        self:UpdateLayout()
+        if updateLayout then self:UpdateLayout() end
     end
 
-    function frame:UpdateTextWrap()
+    function frame:UpdateTextWrap(updateLayout)
+        updateLayout = updateLayout or true
+
         self.dungeonNameText:SetWidth(profile.frameWidth - 2 * CLOSE_BUTTON_SIZE - TEXT_WRAP_PADDING)
         self.listEmptyText:SetWidth(profile.frameWidth - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
         for id, _ in ipairs(MythicPlusUtility.buttonsIndices) do
@@ -342,7 +416,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                                                          - TEXT_WRAP_PADDING)
             end
         end
-        self:UpdateLayout()
+        if updateLayout then self:UpdateLayout() end
     end
 
     local closeButton = CreateFrame("Button", nil, frame)
@@ -377,7 +451,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     listEmptyText:SetJustifyH("LEFT")
     listEmptyText:SetWordWrap(true)
     listEmptyText:SetWidth(profile.frameWidth - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
-    listEmptyText:SetText("No utility abilities for this dungeon")
+    listEmptyText:SetText(L["No utility abilities for this dungeon"])
     listEmptyText:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
     listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING,
                            -TOP_PADDING - frame:GetTop() + frame.dungeonNameText:GetBottom())

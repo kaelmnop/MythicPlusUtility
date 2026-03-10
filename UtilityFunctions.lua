@@ -56,8 +56,6 @@ MythicPlusUtility.dungeonIdToName = {
 
 MythicPlusUtility.globals = {
     labelListOrder = {"default", "defaultText", "custom", "none"},
-    customLabelTypeListOrder = {"text", "icon", "atlas"},
-    customLabelTypeList = {text = L["Text"], atlas = L["AtlasID Texture"], icon = L["Icon"]},
     unlearnAbility = {
         labelList = {default = "\"-\"", defaultText = L["\"Remove\""], none = L["None"], custom = L["Custom"]},
     },
@@ -73,7 +71,7 @@ MythicPlusUtility.globals = {
     },
     iconGlowTypeList = {pixel = L["Pixel Glow"], autocast = L["Autocast Shine"], action = L["Action Button Glow"]},
     iconGlowTypeListOrder = {"pixel", "autocast", "action"},
-    maxValue =  2147483640 -- Little less than Integer Limit
+    maxValue = 2147483640, -- Little less than Integer Limit
 }
 
 MythicPlusUtility.npcIdToEncounterSectionId = {[76227] = 33940}
@@ -199,7 +197,7 @@ function MythicPlusUtility:ExtractSpellIdsFromInstanceData(instanceID)
             self:GetSpellNameById(spellId)
             self:GetSpellIconById(spellId)
             entry.spellIds[spellId] = true
-            i = n
+            i = j
         end
     end
 
@@ -222,7 +220,7 @@ function MythicPlusUtility:ExtractNpcIdsFromInstanceData(instanceID)
             local npcId = tonumber(string.sub(substring, string.find(substring, "%d+")))
             self:GetNpcNameById(npcId)
             entry.npcIds[npcId] = true
-            i = n
+            i = j
         end
     end
 
@@ -250,7 +248,7 @@ function MythicPlusUtility:ExtractTagsFromInstanceData(instanceID)
                 entry.tagsTable.important = true
             end
 
-            i = n
+            i = j
         end
     end
 
@@ -311,7 +309,7 @@ function MythicPlusUtility:FormatSpellsData(spellId)
 
             if self.supportedTags[tag] then entry.tagsTable[tag] = true end
 
-            i = n
+            i = j
         end
     end
 
