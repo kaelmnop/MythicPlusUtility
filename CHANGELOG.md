@@ -1,3 +1,3 @@
-## 1.0.5
-# Localisation
-* Added German localisation. Thanks, Feedy88!
+## 1.0.6
+# Fixes
+* Changed order of libraries in toc file
