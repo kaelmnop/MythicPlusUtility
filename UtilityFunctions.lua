@@ -464,10 +464,6 @@ function MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(instance
                 local hasImportant = false
                 for _, instanceEntry in ipairs(self.instancesData[instanceID]) do
 
-                    if not hasImportant and instanceEntry.tagsTable.important then
-                        hasImportant = true
-                    end
-
                     if not (self.db.profile.hideNotImportant and not instanceEntry.tagsTable.important) then
                         local found = false
                         for tag, _ in pairs(instanceEntry.tagsTable) do
@@ -477,7 +473,12 @@ function MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(instance
                             end
                         end
 
-                        if found then table.insert(entry.list, instanceEntry.formattedText) end
+                        if found then
+                            if not hasImportant and instanceEntry.tagsTable.important then
+                                hasImportant = true
+                            end
+                            table.insert(entry.list, instanceEntry.formattedText)
+                        end
                     end
                 end
 

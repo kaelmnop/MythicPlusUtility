@@ -1,6 +1,7 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("MythicPlusUtility")
 local ACR = LibStub("AceConfigRegistry-3.0")
-local LCG = LibStub("LibCustomGlow")
+local LCG = LibStub("LibCustomGlow-1.0")
+local LSM = LibStub("LibSharedMedia-3.0", true)
 
 local function AddLinkTooltip(widget, link)
     if not link then return end
@@ -57,12 +58,18 @@ local function CalculateCoords(frame, framePoint)
 end
 
 local function ApplyGlowToFrame(frame, db, type)
+    local color = {db.iconGlowColor.r, db.iconGlowColor.g, db.iconGlowColor.b, db.iconGlowColor.a}
     if type == "pixel" then
-        LCG:PixelGlow_Start(frame, db.iconGlowColor, db.glowPixelN, db.glowPixelFrequency, db.glowPixelLength,
-                            db.glowPixelTh, db.glowPixelXOffset, db.glowPixelYOffset, db.glowPixelBorder)
+        LCG.PixelGlow_Start(frame, color, db.glowPixelN, db.glowPixelFrequency, db.glowPixelLength, db.glowPixelTh,
+                            db.glowPixelXOffset, db.glowPixelYOffset, db.glowPixelBorder)
         frame.Glow_Stop = LCG.PixelGlow_Stop
     elseif type == "autocast" then
+        LCG.AutoCastGlow_Start(frame, color, db.glowAutocastN, db.glowAutocastFrequency, db.glowAutocastScale,
+                               db.glowAutocastXOffset, db.glowAutocastYOffset)
+        frame.Glow_Stop = LCG.AutoCastGlow_Stop
     elseif type == "action" then
+        LCG.ButtonGlow_Start(frame, color)
+        frame.Glow_Stop = LCG.ButtonGlow_Stop
     end
 end
 
@@ -88,7 +95,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     frame:SetHyperlinksEnabled(true)
 
     frame:SetHeight(profile.frameHeight)
-    frame:SetClipsChildren(true)
+    -- frame:SetClipsChildren(true)
 
     frame:SetMovable(true)
     frame:EnableMouse(true)
@@ -198,18 +205,61 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
             local spellId = currentAbility.spellId
             if currentAbility.altSpellId then spellId = currentAbility.altSpellId end
 
+            local buttonType
+            if #currentAbility.list > 0 then
+                if currentAbility.isKnown then
+                    if currentAbility.hasImportant or not buttonCosmetic.onlyNotImportantAbility.enabled then
+                        buttonType = "learnedAbility"
+                    else
+                        buttonType = "onlyNotImportantAbility"
+                    end
+                else
+                    if currentAbility.hasImportant or not buttonCosmetic.needOnlyNotImportantAbility.enabled then
+                        buttonType = "needAbility"
+                    else
+                        buttonType = "needOnlyNotImportantAbility"
+                    end
+                end
+            else
+                buttonType = "unlearnAbility"
+            end
+
+            local enabled = false
+            local cosmeticDB
+            if buttonType and buttonCosmetic[buttonType].enabled then
+                enabled = true
+                cosmeticDB = buttonCosmetic[buttonType]
+            end
+
             if self.buttons[id] then
                 local button = self.buttons[id]
                 button:Show()
+
+                button.list = MythicPlusUtility:tablecopy(currentAbility.list)
+                button.hasImportant = currentAbility.hasImportant
+                button.buttonType = buttonType
+
                 button.texture:SetTexture(MythicPlusUtility:GetSpellIconById(spellId))
 
-                if not currentAbility.isKnown then
+                if button.Glow_Stop then
+                    button.Glow_Stop(button)
+                    button.Glow_Stop = false
+                end
+                if enabled and cosmeticDB.iconGlow then
+                    ApplyGlowToFrame(button, cosmeticDB, cosmeticDB.iconGlowType)
+                end
+
+                if enabled and cosmeticDB.iconDesaturate then
                     button.texture:SetDesaturated(true)
                 else
                     button.texture:SetDesaturated(false)
                 end
-
-                button.list = MythicPlusUtility:tablecopy(currentAbility.list)
+                if enabled and cosmeticDB.iconColor then
+                    local color = cosmeticDB.iconColor
+                    button.texture:SetVertexColor(color.r, color.g, color.b, color.a)
+                else
+                    button.texture:SetVertexColor(1, 1, 1, 1)
+                end
 
                 local name = currentAbility.spellName
                 if currentAbility.tagsTable.self_only then
@@ -218,6 +268,30 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 button.label:SetText(name)
 
                 AddLinkTooltip(button, MythicPlusUtility:GetSpellHyperlinkById(spellId))
+
+                local flags = ""
+                if cosmeticDB.labelOutline ~= "NONE" then flags = cosmeticDB.labelOutline end
+                button.labelLeft:SetFont(LSM:Fetch("font", cosmeticDB.labelFont), cosmeticDB.labelSize, flags)
+                button.labelLeft:SetShown(enabled)
+
+                if cosmeticDB.labelWidthType == "automatic" then
+                    button.labelLeft:SetWidth(0)
+                else
+                    button.labelLeft:SetWidth(cosmeticDB.labelWidth)
+                    button.labelLeft:SetWordWrap(cosmeticDB.labelOverflow == "wrap")
+                end
+                if cosmeticDB.labelType == "custom" then
+                    button.labelLeft:SetText(cosmeticDB.customLabelTextFormatted)
+                else
+                    button.labelLeft:SetText(cosmeticDB.label)
+                end
+
+                local color = cosmeticDB.labelColor
+                button.labelLeft:SetTextColor(color.r, color.g, color.b, color.a)
+
+                local sColor = cosmeticDB.labelShadowColor
+                button.labelLeft:SetShadowColor(sColor.r, sColor.g, sColor.b, sColor.a)
+                button.labelLeft:SetShadowOffset(cosmeticDB.labelShadowX, cosmeticDB.labelShadowY)
 
                 if #button.listFrame.lines > #button.list then
                     for i = #button.list + 1, #button.listFrame.lines do
@@ -247,35 +321,12 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 end
 
             else
-
-                local buttonType
-                if #currentAbility.list > 0 then
-                    if currentAbility.isKnown then
-                        if currentAbility.hasImportant or not buttonCosmetic.onlyNotImportantAbility.enabled then
-                            buttonType = "learnedAbility"
-                        else
-                            buttonType = "onlyNotImportantAbility"
-                        end
-                    else
-                        if currentAbility.hasImportant or not buttonCosmetic.needOnlyNotImportantAbility.enabled then
-                            buttonType = "needAbility"
-                        else
-                            buttonType = "needOnlyNotImportantAbility"
-                        end
-                    end
-                else
-                    buttonType = "unlearnAbility"
-                end
-
-                local enabled = false
-                local cosmeticDB
-                if buttonType and buttonCosmetic[buttonType].enabled then
-                    enabled = true
-                    cosmeticDB = buttonCosmetic[buttonType]
-                end
-
                 local button = CreateFrame("Button", nil, self)
                 button:SetSize(profile.buttonSize, profile.buttonSize)
+
+                button.list = MythicPlusUtility:tablecopy(currentAbility.list)
+                button.hasImportant = currentAbility.hasImportant
+                button.buttonType = buttonType
 
                 local texture = button:CreateTexture(nil, "ARTWORK")
                 texture:SetAllPoints()
@@ -287,8 +338,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     texture:SetDesaturated(false)
                 end
                 if enabled and cosmeticDB.iconColor then
-                    texture:SetVertexColor(cosmeticDB.iconColor.r, cosmeticDB.iconColor.g, cosmeticDB.iconColor.b,
-                                           cosmeticDB.iconColor.a)
+                    local color = cosmeticDB.iconColor
+                    texture:SetVertexColor(color.r, color.g, color.b, color.a)
                 end
 
                 if enabled and cosmeticDB.iconGlow then
@@ -296,10 +347,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 end
 
                 button.texture = texture
-                button.list = MythicPlusUtility:tablecopy(currentAbility.list)
 
                 local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-                -- label:SetPoint("TOPLEFT", button, "RIGHT", 10, Round(profile.labelFontSize / 2))
                 label:SetPoint("LEFT", button, "RIGHT", 10)
                 label:SetJustifyH("LEFT")
                 label:SetWordWrap(true)
@@ -311,7 +360,6 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     name = CreateAtlasMarkup("friendslist-recentallies-yellow") .. name
                 end
                 label:SetText(name)
-
                 button.label = label
                 AddLinkTooltip(button, MythicPlusUtility:GetSpellHyperlinkById(spellId))
 
@@ -319,15 +367,29 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 labelLeft:SetPoint("RIGHT", button, "LEFT", 1)
                 labelLeft:SetJustifyH("RIGHT")
 
-                labelLeft:SetWidth(profile.frameWidth - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 5)
-                labelLeft:SetWordWrap(true)
-                labelLeft:SetFont("Fonts\\FRIZQT__.TTf", profile.labelFontSize, nil)
+                local flags = ""
+                if cosmeticDB.labelOutline ~= "NONE" then flags = cosmeticDB.labelOutline end
+                labelLeft:SetFont(LSM:Fetch("font", cosmeticDB.labelFont), cosmeticDB.labelSize, flags)
+                labelLeft:SetShown(enabled)
 
-                local name = currentAbility.spellName
-                if currentAbility.tagsTable.self_only then
-                    name = CreateAtlasMarkup("friendslist-recentallies-yellow") .. name
+                if cosmeticDB.labelWidthType == "automatic" then
+                    labelLeft:SetWidth(0)
+                else
+                    labelLeft:SetWidth(cosmeticDB.labelWidth)
+                    labelLeft:SetWordWrap(cosmeticDB.labelOverflow == "wrap")
                 end
-                labelLeft:SetText(name)
+                if cosmeticDB.labelType == "custom" then
+                    labelLeft:SetText(cosmeticDB.customLabelTextFormatted)
+                else
+                    labelLeft:SetText(cosmeticDB.label)
+                end
+
+                local color = cosmeticDB.labelColor
+                labelLeft:SetTextColor(color.r, color.g, color.b, color.a)
+
+                local sColor = cosmeticDB.labelShadowColor
+                labelLeft:SetShadowColor(sColor.r, sColor.g, sColor.b, sColor.a)
+                labelLeft:SetShadowOffset(cosmeticDB.labelShadowX, cosmeticDB.labelShadowY)
 
                 button.labelLeft = labelLeft
 

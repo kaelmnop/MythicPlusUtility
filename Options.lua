@@ -1,5 +1,5 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("MythicPlusUtility")
-local LSM = LibStub and LibStub("LibSharedMedia-3.0", true)
+local LSM = LibStub("LibSharedMedia-3.0", true)
 local maxValue = MythicPlusUtility.globals.maxValue
 
 MythicPlusUtility.defaults = {
@@ -75,6 +75,7 @@ MythicPlusUtility.defaults = {
                 labelColor = {r = 1, g = 1, b = 0, a = 1},
             },
             needOnlyNotImportantAbility = {
+                iconDesaturate = true,
                 iconGlowColor = {r = 0.75, g = 1, b = 0, a = 1},
                 label = "+?",
                 labelColor = {r = 0.75, g = 1, b = 0, a = 1},
@@ -273,7 +274,7 @@ MythicPlusUtility.options = {
             desc = format(L["Hides dungeon entries that are marked with %s"],
                           CreateAtlasMarkup("map-icon-ignored-bluequestion")),
             get = "GetValue",
-            set = "SetValueChangeInstance",
+            set = "SetValueInstance",
         },
         difficultyID = {
             type = "multiselect",
@@ -313,7 +314,7 @@ local function populateButtonCosmeticGroup()
     }
 
     for i, entry in ipairs(table) do
-        MythicPlusUtility.options.args.buttonCosmeticGroup[entry.name] = {
+        MythicPlusUtility.options.args.buttonCosmeticGroup.args[entry.name] = {
             type = "group",
             inline = false,
             order = i,
@@ -673,7 +674,7 @@ local function populateButtonCosmeticGroup()
                     width = 3,
                     multiline = true,
                     hidden = "ButtonCosmeticHide",
-                    L["Text supports {texture:IconID} and {atlas:AtlasID} replacers. Instead of IconID you can provide a path to the texture, for AtlasID, I recommend finding Atlas Names with TextureAtlasViewer addon."],
+                    desc = L["Text supports {texture:IconID} and {atlas:AtlasID} replacers. Instead of IconID you can provide a path to the texture, for AtlasID, I recommend finding Atlas Names with TextureAtlasViewer addon."],
                     set = "SetValueButtonCosmeticLabel",
                 },
             },
@@ -704,7 +705,7 @@ function MythicPlusUtility:GetValueInstance(info)
 end
 
 function MythicPlusUtility:SetValueInstance(info, value)
-    self.db.profile.instanceID = value
+    self.db.profile[info[#info]] = value
     if self.Frame then self.Frame:ChangeInstance() end
 end
 
@@ -818,7 +819,7 @@ function MythicPlusUtility:SetValueButtonCosmeticLabel(info, value)
 end
 
 function MythicPlusUtility:SetValueButtonCosmeticGlow(info, value)
-    self.db.profile.buttonCosmetic[info[#info - 1]] = value
+    self.db.profile.buttonCosmetic[info[#info - 1]][info[#info]] = value
 
     if self.Frame then
         -- update glow function
