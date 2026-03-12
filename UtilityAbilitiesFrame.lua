@@ -308,7 +308,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                         line:SetJustifyH("LEFT")
                         line:SetWordWrap(true)
                         line:SetWidth(profile.frameWidth - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
-                        line:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
+                        line:SetFont(profile.font, profile.textFontSize, nil)
                         line:SetText(text)
 
                         if listId == 1 then
@@ -353,7 +353,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 label:SetJustifyH("LEFT")
                 label:SetWordWrap(true)
                 label:SetWidth(profile.frameWidth - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 5)
-                label:SetFont("Fonts\\FRIZQT__.TTf", profile.labelFontSize, nil)
+                label:SetFont(profile.font, profile.labelFontSize, nil)
 
                 local name = currentAbility.spellName
                 if currentAbility.tagsTable.self_only then
@@ -414,7 +414,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     line:SetJustifyH("LEFT")
                     line:SetWordWrap(true)
                     line:SetWidth(profile.frameWidth - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
-                    line:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
+                    line:SetFont(profile.font, profile.textFontSize, nil)
                     line:SetText(text)
 
                     if i == 1 then
@@ -451,14 +451,14 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     function frame:UpdateFont(updateLayout)
         updateLayout = updateLayout or true
 
-        self.dungeonNameText:SetFont("Fonts\\FRIZQT__.TTf", profile.dungeonNameSize, nil)
-        self.listEmptyText:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
+        self.dungeonNameText:SetFont(profile.font, profile.dungeonNameSize, nil)
+        self.listEmptyText:SetFont(profile.font, profile.textFontSize, nil)
         if #self.buttons > 0 then
             for _, button in ipairs(self.buttons) do
-                button.label:SetFont("Fonts\\FRIZQT__.TTf", profile.labelFontSize, nil)
+                button.label:SetFont(profile.font, profile.labelFontSize, nil)
                 button.label:SetPoint("TOPLEFT", button, "RIGHT", 10, Round(profile.labelFontSize / 2))
                 for _, line in ipairs(button.listFrame.lines) do
-                    line:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
+                    line:SetFont(profile.font, profile.textFontSize, nil)
                 end
             end
         end
@@ -504,7 +504,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     dungeonNameText:SetWordWrap(true)
     dungeonNameText:SetWidth(profile.frameWidth - 2 * CLOSE_BUTTON_SIZE - TEXT_WRAP_PADDING)
     dungeonNameText:SetText(self.dungeonIdToName[profile.instanceID] or "")
-    dungeonNameText:SetFont("Fonts\\FRIZQT__.TTf", profile.dungeonNameSize, "OUTLINE")
+    dungeonNameText:SetFont(profile.font, profile.dungeonNameSize, "OUTLINE")
     dungeonNameText:SetPoint("TOP", 0, -TOP_PADDING)
 
     frame.dungeonNameText = dungeonNameText
@@ -514,7 +514,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     listEmptyText:SetWordWrap(true)
     listEmptyText:SetWidth(profile.frameWidth - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
     listEmptyText:SetText(L["No utility abilities for this dungeon"])
-    listEmptyText:SetFont("Fonts\\FRIZQT__.TTf", profile.textFontSize, nil)
+    listEmptyText:SetFont(profile.font, profile.textFontSize, nil)
     listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING,
                            -TOP_PADDING - frame:GetTop() + frame.dungeonNameText:GetBottom())
     listEmptyText:Hide()
