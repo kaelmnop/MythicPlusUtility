@@ -57,6 +57,14 @@ local function CalculateCoords(frame, framePoint)
     return x, y
 end
 
+local function GetbuttonsIndices()
+    if MythicPlusUtility.db.profile.buttonCosmetic.unlearnAbility.enabled then
+        return MythicPlusUtility.buttonsIndicesWithEmpty
+    else
+        return MythicPlusUtility.buttonsIndices
+    end
+end
+
 local function ApplyGlowToFrame(frame, db, type)
     local color = {db.iconGlowColor.r, db.iconGlowColor.g, db.iconGlowColor.b, db.iconGlowColor.a}
     if type == "pixel" then
@@ -80,6 +88,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     local TOP_PADDING = 5
     local TEXT_WRAP_PADDING = 7
     local CLOSE_BUTTON_SIZE = 15
+    local buttonsIndices
 
     local db = self.db
     local profile = self.db.profile
@@ -159,7 +168,16 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
         local currentY = -TOP_PADDING - self:GetTop() + self.dungeonNameText:GetBottom()
         self.listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING, currentY)
 
-        for id, _ in ipairs(MythicPlusUtility.buttonsIndices) do
+        buttonsIndices = GetbuttonsIndices()
+        local max = 0
+        for id, _ in ipairs(buttonsIndices) do
+            if self.buttons[id].labelLeft:IsShown() and self.buttons[id].labelLeft:GetWrappedWidth() > max then
+                max = self.buttons[id].labelLeft:GetWrappedWidth()
+            end
+        end
+        local LEFT_PADDING_Total = LEFT_PADDING + max
+
+        for id, _ in ipairs(buttonsIndices) do
             local button = self.buttons[id]
             button:ClearAllPoints()
             button:SetPoint("TOPLEFT", LEFT_PADDING, currentY)
@@ -187,20 +205,22 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
     function frame:UpdateButtons()
 
-        if #MythicPlusUtility.buttonsIndices == 0 then
+        buttonsIndices = GetbuttonsIndices()
+
+        if #buttonsIndices == 0 then
             self.listEmptyText:Show()
         else
             self.listEmptyText:Hide()
         end
 
-        if #self.buttons > #MythicPlusUtility.buttonsIndices then
-            for i = #MythicPlusUtility.buttonsIndices + 1, #self.buttons do
+        if #self.buttons > #buttonsIndices then
+            for i = #buttonsIndices + 1, #self.buttons do
                 self.buttons[i].listFrame:Hide()
                 self.buttons[i]:Hide()
             end
         end
 
-        for id, abilityId in ipairs(MythicPlusUtility.buttonsIndices) do
+        for id, abilityId in ipairs(buttonsIndices) do
             local currentAbility = MythicPlusUtility.currentAbilitiesList[abilityId]
             local spellId = currentAbility.spellId
             if currentAbility.altSpellId then spellId = currentAbility.altSpellId end
@@ -467,10 +487,11 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
     function frame:UpdateTextWrap(updateLayout)
         updateLayout = updateLayout or true
+        buttonsIndices = GetbuttonsIndices()
 
         self.dungeonNameText:SetWidth(profile.frameWidth - 2 * CLOSE_BUTTON_SIZE - TEXT_WRAP_PADDING)
         self.listEmptyText:SetWidth(profile.frameWidth - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
-        for id, _ in ipairs(MythicPlusUtility.buttonsIndices) do
+        for id, _ in ipairs(buttonsIndices) do
             local button = self.buttons[id]
             button.label:SetWidth(profile.frameWidth - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 1)
             for subId, _ in ipairs(button.list) do
