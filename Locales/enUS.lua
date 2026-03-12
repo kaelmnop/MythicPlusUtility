@@ -81,11 +81,11 @@ L["Fixed"] = true
 L["Overflow"] = true
 L["Ignore"] = true
 L["Wrap"] = true
-L["Learned Ability"] = true
-L["Unlearn Ability"] = true
-L["Needed Ability"] = true
+L["Known Ability"] = true
+L["Remove Ability"] = true
+L["Add Ability"] = true
 L["Only Not Important Ability"] = true
-L["Needed Only Not Important Ability"] = true
+L["Add Only Not Important Ability"] = true
 L["Text supports {texture:IconID} and {atlas:AtlasID} replacers. Instead of IconID you can provide a path to the texture, for AtlasID, I recommend finding Atlas Names with TextureAtlasViewer addon."] =
   true
 L["No utility abilities for this dungeon"] = true

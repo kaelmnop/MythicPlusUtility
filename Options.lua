@@ -124,7 +124,10 @@ MythicPlusUtility.options = {
                     get = "GetValue",
                     set = function(info, value)
                         MythicPlusUtility.db.profile[info[#info]] = value
-                        if MythicPlusUtility.Frame then MythicPlusUtility.Frame:SetHeight(value) end
+                        if MythicPlusUtility.Frame then
+                            MythicPlusUtility.Frame:SetHeight(value)
+                            MythicPlusUtility.Frame.leftLabelFrame:SetHeight(value)
+                        end
                     end,
                     min = 150,
                     max = 4800,
@@ -306,11 +309,11 @@ MythicPlusUtility.options = {
 local function populateButtonCosmeticGroup()
 
     local table = {
-        [1] = {name = "learnedAbility", nameLabel = L["Learned Ability"]},
-        [2] = {name = "unlearnAbility", nameLabel = L["Unlearn Ability"]},
-        [3] = {name = "needAbility", nameLabel = L["Needed Ability"]},
+        [1] = {name = "learnedAbility", nameLabel = L["Known Ability"]},
+        [2] = {name = "unlearnAbility", nameLabel = L["Remove Ability"]},
+        [3] = {name = "needAbility", nameLabel = L["Add Ability"]},
         [4] = {name = "onlyNotImportantAbility", nameLabel = L["Only Not Important Ability"]},
-        [5] = {name = "needOnlyNotImportantAbility", nameLabel = L["Needed Only Not Important Ability"]},
+        [5] = {name = "needOnlyNotImportantAbility", nameLabel = L["Add Only Not Important Ability"]},
     }
 
     for i, entry in ipairs(table) do
@@ -728,7 +731,7 @@ function MythicPlusUtility:SetValueButtonCosmetic(info, value)
         if name == "enabled" then
             -- update everything function
         elseif name == "iconDesaturate" then
-            -- update only icon function
+            self.Frame:updateCosmeticIcon(info[#info - 1], false)
         end
 
     end
@@ -767,6 +770,8 @@ function MythicPlusUtility:SetValueButtonCosmeticLabelWidth(info, value)
     end
 end
 
+local function escape_pattern(text) return text:gsub("([^%w])", "%%%1") end
+
 function MythicPlusUtility:SetValueButtonCosmeticLabel(info, value)
     local name = info[#info]
     local db = self.db.profile.buttonCosmetic[info[#info - 1]]
@@ -776,7 +781,7 @@ function MythicPlusUtility:SetValueButtonCosmeticLabel(info, value)
         local label = ""
         db.isCustom = value == "custom"
         if value == "default" or value == "defaultText" then
-            label = self.globals[info[#info - 1]].labelList[value]
+            label = string.gsub(self.globals[info[#info - 1]].labelList[value], "\"", "")
         end
         db.label = label
 
@@ -784,31 +789,36 @@ function MythicPlusUtility:SetValueButtonCosmeticLabel(info, value)
         local textureTable = {}
         local i = 0
         while true do
-            local n, j = string.find(db[name], "{texture:.+}", i + 1)
+            local n, j = string.find(db[name], "%b{}", i + 1)
             if n == nil then break end
-            local substring = string.sub(db[name], n + 9, j - 1)
-            textureTable[substring] = true
+            local substring = string.sub(db[name], n, j)
+            if string.find(substring, "{texture:.+") then
+                textureTable[string.sub(substring, 10, #substring - 1)] = true
+            end
             i = n
         end
 
         local atlasTable = {}
         i = 0
         while true do
-            local n, j = string.find(db[name], "{atlas:.+}", i + 1)
+            local n, j = string.find(db[name], "%b{}", i + 1)
             if n == nil then break end
-            local substring = string.sub(db[name], n + 7, j - 1)
-            atlasTable[substring] = true
+            local substring = string.sub(db[name], n, j)
+            if string.find(substring, "{atlas:.+") then
+                atlasTable[string.sub(substring, 8, #substring - 1)] = true
+            end
             i = n
         end
 
         db.customLabelTextFormatted = db[name]
-
         for textureID, _ in pairs(textureTable) do
-            db.customLabelTextFormatted = string.gsub(db.customLabelTextFormatted, "{texture:" .. textureID .. "}",
+            db.customLabelTextFormatted = string.gsub(db.customLabelTextFormatted,
+                                                      "%{texture:" .. escape_pattern(textureID) .. "%}",
                                                       self:IconToChatIcon(textureID))
         end
         for atlasID, _ in pairs(atlasTable) do
-            db.customLabelTextFormatted = string.gsub(db.customLabelTextFormatted, "{atlas:" .. atlasID .. "}",
+            db.customLabelTextFormatted = string.gsub(db.customLabelTextFormatted,
+                                                      "%{atlas:" .. escape_pattern(atlasID) .. "%}",
                                                       CreateAtlasMarkup(atlasID))
         end
     end
@@ -838,7 +848,7 @@ function MythicPlusUtility:SetValueButtonCosmeticColor(info, r, g, b, a)
     db[name] = {r = r, g = g, b = b, a = a}
     if self.Frame then
         if name == "iconColor" then
-            -- update only icon function
+           self.Frame:updateCosmeticIcon(info[#info - 1], false)
         elseif name == "labelShadowColor" then
             -- update text shadow, no layout
         elseif name == "iconGlowColor" then

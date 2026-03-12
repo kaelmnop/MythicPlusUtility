@@ -104,7 +104,13 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     frame:SetHyperlinksEnabled(true)
 
     frame:SetHeight(profile.frameHeight)
-    -- frame:SetClipsChildren(true)
+    frame:SetClipsChildren(true)
+
+    local leftLabelFrame = CreateFrame("Frame", nil, UIParent)
+    leftLabelFrame:SetPoint("TOPRIGHT", frame, "TOPLEFT", LEFT_PADDING - 1, 0)
+    leftLabelFrame:SetHeight(frame:GetHeight())
+    leftLabelFrame:SetClipsChildren(true)
+    frame.leftLabelFrame = leftLabelFrame
 
     frame:SetMovable(true)
     frame:EnableMouse(true)
@@ -167,15 +173,15 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     function frame:UpdateLayout()
         local currentY = -TOP_PADDING - self:GetTop() + self.dungeonNameText:GetBottom()
         self.listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING, currentY)
-
         buttonsIndices = GetbuttonsIndices()
-        local max = 0
+
+        local width = 0
         for id, _ in ipairs(buttonsIndices) do
-            if self.buttons[id].labelLeft:IsShown() and self.buttons[id].labelLeft:GetWrappedWidth() > max then
-                max = self.buttons[id].labelLeft:GetWrappedWidth()
+            if self.buttons[id].labelLeft:IsShown() and self.buttons[id].labelLeft:GetWrappedWidth() > width then
+                width = self.buttons[id].labelLeft:GetWrappedWidth()
             end
         end
-        local LEFT_PADDING_Total = LEFT_PADDING + max
+        leftLabelFrame:SetWidth(width)
 
         for id, _ in ipairs(buttonsIndices) do
             local button = self.buttons[id]
@@ -244,12 +250,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 buttonType = "unlearnAbility"
             end
 
-            local enabled = false
-            local cosmeticDB
-            if buttonType and buttonCosmetic[buttonType].enabled then
-                enabled = true
-                cosmeticDB = buttonCosmetic[buttonType]
-            end
+            local enabled = buttonCosmetic[buttonType].enabled
+            local cosmeticDB = buttonCosmetic[buttonType]
 
             if self.buttons[id] then
                 local button = self.buttons[id]
@@ -340,6 +342,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     end
                 end
 
+                if (not (#button.list > 0)) and button.listFrame:IsShown() then button.listFrame:Hide() end
+
             else
                 local button = CreateFrame("Button", nil, self)
                 button:SetSize(profile.buttonSize, profile.buttonSize)
@@ -369,7 +373,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 button.texture = texture
 
                 local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-                label:SetPoint("LEFT", button, "RIGHT", 10)
+                label:SetPoint("LEFT", button, "RIGHT", 10, 0)
                 label:SetJustifyH("LEFT")
                 label:SetWordWrap(true)
                 label:SetWidth(profile.frameWidth - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 5)
@@ -383,8 +387,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 button.label = label
                 AddLinkTooltip(button, MythicPlusUtility:GetSpellHyperlinkById(spellId))
 
-                local labelLeft = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-                labelLeft:SetPoint("RIGHT", button, "LEFT", 1)
+                local labelLeft = frame.leftLabelFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                labelLeft:SetPoint("RIGHT", button, "LEFT", -1, 0)
                 labelLeft:SetJustifyH("RIGHT")
 
                 local flags = ""
@@ -446,14 +450,41 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 end
 
                 button:SetScript("OnClick", function(self)
-                    self.listFrame:SetShown(not self.listFrame:IsShown())
-                    frame:UpdateLayout()
+                    if #self.list > 0 then
+                        self.listFrame:SetShown(not self.listFrame:IsShown())
+                        frame:UpdateLayout()
+                    end
                 end)
 
                 table.insert(self.buttons, button)
             end
         end
 
+    end
+
+    function frame:updateCosmeticIcon(buttonType, updateLayout)
+        updateLayout = updateLayout or true
+        local changed = false
+        local cosmeticDB = buttonCosmetic[buttonType]
+        local color = buttonCosmetic[buttonType].iconColor
+        buttonsIndices = GetbuttonsIndices()
+
+        for id, _ in ipairs(buttonsIndices) do
+            local button = self.buttons[id]
+            if button.buttonType == buttonType then
+                if button.texture:IsDesaturated() ~= cosmeticDB.iconDesaturate then
+                    changed = true
+                    button.texture:SetDesaturated(cosmeticDB.iconDesaturate)
+                end
+                local r, g, b, a = button.texture:GetVertexColor()
+                if r ~= color.r or g ~= color.g or b ~= color.b or a ~= color.a then
+                    changed = true
+                    button.texture:SetVertexColor(color.r, color.g, color.b, color.a)
+                end
+            end
+        end
+
+        if updateLayout and changed then self:UpdateLayout() end
     end
 
     function frame:UpdateButtonSize(updateLayout)
