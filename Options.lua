@@ -7,10 +7,6 @@ MythicPlusUtility.defaults = {
     profile = {
         toggleFrameLock = true,
         hideOnStart = true,
-        frameWidth = 350,
-        frameHeight = 600,
-        frameXOffset = 100,
-        frameYOffset = -150,
         frameBackground = {r = 0, g = 0, b = 0, a = 0.5},
         buttonSize = 35,
         labelFontSize = 12,
@@ -18,9 +14,17 @@ MythicPlusUtility.defaults = {
         dungeonNameSize = 20,
         hideNotImportant = false,
         instanceID = MythicPlusUtility.defaultDungeonId,
-        selectFramePoint = "TOPLEFT",
         difficultyID = {[1] = false, [2] = false, [23] = true},
-
+        windowSettings = {
+            width = 350,
+            height = 600,
+            autoExpand = false,
+            maxHeightEnable = false,
+            maxHeight = 1200,
+            xOffset = 100,
+            yOffset = -150,
+            framePoint = "TOPLEFT",
+        },
         buttonCosmetic = {
             ['**'] = {
                 enabled = true,
@@ -94,40 +98,31 @@ MythicPlusUtility.options = {
         toggleFrame = {type = "execute", order = 1, name = L["Toggle Window"], func = "ToggleAbilitiesFrame"},
         breakLine1 = {type = "header", order = 10, name = ""},
         breakLine2 = {type = "header", order = 20, name = ""},
-        frameGroup = {
+        toggleFrameLock = {type = "toggle", order = 12, name = L["Lock Window"], get = "GetValue", set = "SetValue"},
+        windowSettings = {
             type = "group",
             order = 1,
             name = L["Window Position and Size Settings"],
+            get = "GetValueWithParent",
+            set = "SetValueWindowSettings",
             args = {
-                frameWidth = {
+                sizeHeader = {type = "header", order = 1, name = L["Size Settings"]},
+                width = {
                     type = "range",
-                    order = 1,
+                    order = 1.1,
                     name = L["Width"],
-                    get = "GetValue",
-                    set = function(info, value)
-                        MythicPlusUtility.db.profile[info[#info]] = value
-                        if MythicPlusUtility.Frame then
-                            MythicPlusUtility.Frame:SetWidth(value)
-                            MythicPlusUtility.Frame:UpdateTextWrap()
-                        end
-                    end,
                     min = 150,
                     max = 8880,
                     softMax = 2220,
                     bigStep = 5,
                     step = 0.01,
                 },
-                frameHeight = {
+                height = {
                     type = "range",
-                    order = 2,
+                    order = 1.2,
                     name = L["Height"],
-                    get = "GetValue",
-                    set = function(info, value)
-                        MythicPlusUtility.db.profile[info[#info]] = value
-                        if MythicPlusUtility.Frame then
-                            MythicPlusUtility.Frame:SetHeight(value)
-                            MythicPlusUtility.Frame.leftLabelFrame:SetHeight(value)
-                        end
+                    hidden = function(info)
+                        return MythicPlusUtility.db.profile.windowSettings.autoExpand
                     end,
                     min = 150,
                     max = 4800,
@@ -135,20 +130,33 @@ MythicPlusUtility.options = {
                     bigStep = 5,
                     step = 0.01,
                 },
-                breakLine1 = {type = "header", order = 10, name = ""},
-                toggleFrameLock = {
+                autoExpand = {type = "toggle", order = 1.3, name = L["Auto Expand Window"]},
+                maxHeightEnable = {
                     type = "toggle",
-                    order = 12,
-                    name = L["Lock Window"],
-                    get = "GetValue",
-                    set = "SetValue",
+                    order = 1.4,
+                    name = L["Max Height"],
+                    hidden = function(info)
+                        return MythicPlusUtility.db.profile.windowSettings.autoExpand
+                    end,
                 },
-                selectFramePoint = {
+                maxHeight = {
+                    type = "range",
+                    order = 1.5,
+                    name = L["Max Height"],
+                    hidden = function(info)
+                        return MythicPlusUtility.db.profile.windowSettings.maxHeightEnable
+                    end,
+                    min = 150,
+                    max = 4800,
+                    softMax = 1200,
+                    bigStep = 5,
+                    step = 0.01,
+                },
+                positionHeader = {type = "header", order = 2, name = L["Position Settings"]},
+                framePoint = {
                     type = "select",
-                    order = 11,
+                    order = 2.1,
                     name = L["Anchor to Screen's"],
-                    get = "GetValue",
-                    set = "SetValueUpdatePosition",
                     sorting = {
                         "TOPLEFT", "TOP", "TOPRIGHT", "LEFT", "CENTER", "RIGHT", "BOTTOMLEFT", "BOTTOM", "BOTTOMRIGHT",
                     },
@@ -164,13 +172,10 @@ MythicPlusUtility.options = {
                         BOTTOMRIGHT = "BOTTOMRIGHT",
                     },
                 },
-                breakLine2 = {type = "header", order = 20, name = ""},
-                frameXOffset = {
+                xOffset = {
                     type = "range",
-                    order = 21,
+                    order = 2.2,
                     name = L["X-Offset"],
-                    get = "GetValue",
-                    set = "SetValueUpdatePosition",
                     min = -8880,
                     max = 8880,
                     softMin = -2220,
@@ -178,12 +183,10 @@ MythicPlusUtility.options = {
                     bigStep = 10,
                     step = 0.01,
                 },
-                frameYOffset = {
+                yOffset = {
                     type = "range",
-                    order = 22,
+                    order = 2.3,
                     name = L["Y-Offset"],
-                    get = "GetValue",
-                    set = "SetValueUpdatePosition",
                     min = -4800,
                     max = 4800,
                     softMin = -1200,
@@ -193,10 +196,10 @@ MythicPlusUtility.options = {
                 },
             },
         },
-        textGroup = {
+        textAndIconsGroup = {
             type = "group",
             order = 2,
-            name = L["Text and Icon Size Settings"],
+            name = L["Text and Icon Settings"],
             args = {
                 buttonSize = {
                     type = "range",
@@ -376,7 +379,6 @@ local function populateButtonCosmeticGroup()
                     get = "GetValueButtonCosmeticColor",
                     set = "SetValueButtonCosmeticColor",
                 },
-
                 -- Pixel Glow
                 glowPixelN = {
                     type = "range",
@@ -557,7 +559,7 @@ local function populateButtonCosmeticGroup()
                     name = L["Font"],
                     width = 1.5,
                     hidden = "ButtonCosmeticHide",
-                    set = "SetValueButtonCosmeticLabelFont",
+                    set = "SetValueButtonCosmeticLabel",
                     values = LSM:HashTable("font"),
                 },
                 labelSize = {
@@ -566,7 +568,7 @@ local function populateButtonCosmeticGroup()
                     name = L["Text Size"],
                     width = 0.7,
                     hidden = "ButtonCosmeticHide",
-                    set = "SetValueButtonCosmeticLabelFont",
+                    set = "SetValueButtonCosmeticLabel",
                     min = 6,
                     max = maxValue,
                     softMax = 72,
@@ -585,7 +587,7 @@ local function populateButtonCosmeticGroup()
                     name = L["Outline"],
                     width = 1.5,
                     hidden = "ButtonCosmeticHide",
-                    set = "SetValueButtonCosmeticLabelFont",
+                    set = "SetValueButtonCosmeticLabel",
                     values = {
                         MONOCHROME = L["Monochrome"],
                         ["MONOCHROME, OUTLINE"] = L["Monochrome Outline"],
@@ -610,7 +612,7 @@ local function populateButtonCosmeticGroup()
                     name = L["Shadow X-Offset"],
                     width = 0.7,
                     hidden = "ButtonCosmeticHide",
-                    set = "SetValueButtonCosmeticShadow",
+                    set = "SetValueButtonCosmeticLabel",
                     min = -maxValue,
                     max = maxValue,
                     softMin = -15,
@@ -624,7 +626,7 @@ local function populateButtonCosmeticGroup()
                     name = L["Shadow Y-Offset"],
                     width = 0.7,
                     hidden = "ButtonCosmeticHide",
-                    set = "SetValueButtonCosmeticShadow",
+                    set = "SetValueButtonCosmeticLabel",
                     min = -maxValue,
                     max = maxValue,
                     softMin = -15,
@@ -638,7 +640,7 @@ local function populateButtonCosmeticGroup()
                     name = L["Width"],
                     width = 0.7,
                     hidden = "ButtonCosmeticHide",
-                    set = "SetValueButtonCosmeticLabelWidth",
+                    set = "SetValueButtonCosmeticLabel",
                     values = {automatic = L["Automatic"], fixed = L["Fixed"]},
                 },
                 labelWidth = {
@@ -647,7 +649,7 @@ local function populateButtonCosmeticGroup()
                     name = L["Width"],
                     width = 0.7,
                     hidden = "ButtonCosmeticHide",
-                    set = "SetValueButtonCosmeticLabelWidth",
+                    set = "SetValueButtonCosmeticLabel",
                     min = 1,
                     max = maxValue,
                     softMax = 200,
@@ -658,7 +660,7 @@ local function populateButtonCosmeticGroup()
                     type = "select",
                     order = 4.7,
                     name = L["Overflow"],
-                    set = "SetValueButtonCosmeticLabelWidth",
+                    set = "SetValueButtonCosmeticLabel",
                     width = 0.7,
                     hidden = "ButtonCosmeticHide",
                     values = {ignore = L["Ignore"], wrap = L["Wrap"]},
@@ -690,6 +692,28 @@ function MythicPlusUtility:GetValue(info) return self.db.profile[info[#info]] en
 
 function MythicPlusUtility:SetValue(info, value) self.db.profile[info[#info]] = value end
 
+function MythicPlusUtility:SetValueWindowSettings(info, value)
+    local name = info[#info]
+    local db = self.db.profile[info[#info - 1]]
+    db[name] = value
+
+    if self.Frame then
+        if name == "width" then
+            self.Frame:SetWidth(value)
+            self.Frame:UpdateTextWrap()
+        elseif name == "height" or name == "autoExpand" or name == "maxHeightEnable" or name == "maxHeight" then
+            if not db.autoExpand then
+                self.Frame:SetHeight(db.height)
+                self.Frame.leftLabelFrame:SetHeight(db.height)
+            else
+                self.Frame:UpdateLayout()
+            end
+        elseif name == "framePoint" or name == "xOffset" or name == "yOffset" then
+            self.Frame:UpdatePosition()
+        end
+    end
+end
+
 function MythicPlusUtility:SetValueUpdatePosition(info, value)
     self.db.profile[info[#info]] = value
     if self.Frame then self.Frame:UpdatePosition() end
@@ -716,6 +740,8 @@ function MythicPlusUtility:GetValueDifficulty(info, key) return self.db.profile.
 
 function MythicPlusUtility:SetValueDifficulty(info, key, state) self.db.profile.difficultyID[key] = state end
 
+function MythicPlusUtility:GetValueWithParent(info) return self.db.profile[info[#info - 1]][info[#info]] end
+
 function MythicPlusUtility:GetValueButtonCosmetic(info)
     return self.db.profile.buttonCosmetic[info[#info - 1]][info[#info]]
 end
@@ -723,50 +749,15 @@ end
 function MythicPlusUtility:SetValueButtonCosmetic(info, value)
     local name = info[#info]
     local db = self.db.profile.buttonCosmetic[info[#info - 1]]
-
     db[name] = value
 
     if self.Frame then
-
         if name == "enabled" then
-            -- update everything function
+            self.Frame:UpdateButtons()
+            self.Frame:UpdateLayout()
         elseif name == "iconDesaturate" then
-            self.Frame:updateCosmeticIcon(info[#info - 1], false)
+            self.Frame:updateButtonCosmeticIcon(info[#info - 1])
         end
-
-    end
-end
-
-function MythicPlusUtility:SetValueButtonCosmeticLabelFont(info, value)
-    local name = info[#info]
-    local db = self.db.profile.buttonCosmetic[info[#info - 1]]
-
-    db[name] = value
-
-    if self.Frame then
-        -- update text font and layout
-    end
-end
-
-function MythicPlusUtility:SetValueButtonCosmeticShadow(info, value)
-    local name = info[#info]
-    local db = self.db.profile.buttonCosmetic[info[#info - 1]]
-
-    db[name] = value
-
-    if self.Frame then
-        -- update text shadow
-    end
-end
-
-function MythicPlusUtility:SetValueButtonCosmeticLabelWidth(info, value)
-    local name = info[#info]
-    local db = self.db.profile.buttonCosmetic[info[#info - 1]]
-
-    db[name] = value
-
-    if self.Frame then
-        -- update text width and layout
     end
 end
 
@@ -775,8 +766,8 @@ local function escape_pattern(text) return text:gsub("([^%w])", "%%%1") end
 function MythicPlusUtility:SetValueButtonCosmeticLabel(info, value)
     local name = info[#info]
     local db = self.db.profile.buttonCosmetic[info[#info - 1]]
-
     db[name] = value
+
     if name == "labelType" then
         local label = ""
         db.isCustom = value == "custom"
@@ -823,17 +814,12 @@ function MythicPlusUtility:SetValueButtonCosmeticLabel(info, value)
         end
     end
 
-    if self.Frame then
-        -- update text and layout
-    end
+    if self.Frame then self.Frame:updateButtonCosmeticLabel(info[#info - 1]) end
 end
 
 function MythicPlusUtility:SetValueButtonCosmeticGlow(info, value)
     self.db.profile.buttonCosmetic[info[#info - 1]][info[#info]] = value
-
-    if self.Frame then
-        -- update glow function
-    end
+    if self.Frame then self.Frame:updateButtonCosmeticGlow(info[#info - 1]) end
 end
 
 function MythicPlusUtility:GetValueButtonCosmeticColor(info)
@@ -844,15 +830,15 @@ end
 function MythicPlusUtility:SetValueButtonCosmeticColor(info, r, g, b, a)
     local name = info[#info]
     local db = self.db.profile.buttonCosmetic[info[#info - 1]]
-
     db[name] = {r = r, g = g, b = b, a = a}
+
     if self.Frame then
         if name == "iconColor" then
-           self.Frame:updateCosmeticIcon(info[#info - 1], false)
-        elseif name == "labelShadowColor" then
-            -- update text shadow, no layout
+            self.Frame:updateButtonCosmeticIcon(info[#info - 1])
+        elseif name == "labelShadowColor" or name == "labelColor" then
+            self.Frame:updateButtonCosmeticLabel(info[#info - 1])
         elseif name == "iconGlowColor" then
-            -- update glow
+            self.Frame:updateButtonCosmeticGlow(info[#info - 1])
         end
     end
 end
@@ -886,5 +872,4 @@ function MythicPlusUtility:ButtonCosmeticHide(info)
     end
 
     return enabled
-
 end

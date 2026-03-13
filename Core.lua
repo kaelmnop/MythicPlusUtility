@@ -4,8 +4,8 @@ local ACD = LibStub("AceConfigDialog-3.0")
 
 function MythicPlusUtility:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("MythicPlusUtilityDB", self.defaults, true)
-
     AC:RegisterOptionsTable("MythicPlusUtility_Options", self.options)
+    self:MigrateOldSettings()
 
     self.optionsFrame = ACD:AddToBlizOptions("MythicPlusUtility_Options", "Mythic Plus Utility")
     ACD:SetDefaultSize("MythicPlusUtility_Options", 800, 630)
@@ -17,17 +17,11 @@ function MythicPlusUtility:OnInitialize()
     -- ACD:AddToBlizOptions("MythicPlusUtility_Profiles", "Profiles", "Mythic Plus Utility")
 
     self:RegisterChatCommand("mpu", "SlashCommand")
-
     self:InitializeMinimapIcon()
-
     self:GetCharacterInfo()
-
     self:ExtractSpellsFromDB()
-
     self:CheckLocalisation()
-
     self:FormatInstanceData()
-
     self:FormatSpellsData()
 
     C_Timer.NewTimer(1, function()
@@ -36,6 +30,23 @@ function MythicPlusUtility:OnInitialize()
         end
         MythicPlusUtility:CreateCurrentAbilitiesList()
     end)
+
+end
+
+function MythicPlusUtility:MigrateOldSettings()
+    local db = self.db.profile
+
+    local function migrateFrameSetting(oldSetting, newSetting)
+        if db[oldSetting] then
+            db.windowSettings[newSetting] = db[oldSetting]
+            db[oldSetting] = nil
+        end
+    end
+    local migrateFrameSettingTable = {
+        {"frameWidth", "width"}, {"frameHeight", "height"}, {"frameXOffset", "xOffset"}, {"frameYOffset", "yOffset"},
+        {"selectFramePoint", "framePoint"},
+    }
+    for _, setting in pairs(migrateFrameSettingTable) do migrateFrameSetting(setting[1], setting[2]) end
 
 end
 
