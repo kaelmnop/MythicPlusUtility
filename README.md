@@ -8,36 +8,39 @@ https://www.curseforge.com/wow/addons/mythic-plus-utility-mpu
 
 ## Usage
 
-*   `/mpu` - opens addon settings out of combat
-*   `/mpu show` - opens Utility Window for selected dungeon in settings
-*   `/mpu minimap` - toggles Minimap Button
+* `/mpu` - opens addon settings out of combat
+* `/mpu show` - opens Utility Window for selected dungeon in settings
+* `/mpu minimap` - toggles Minimap Button
+* `/mpu profile` - opens profile settings out of combat
 
 ## Key Features
 
-*   Customisable Window with utility abilities for a dungeon
-*   Clickable icons to show where to use that ability
-*   Unlearned abilities are desaturated
-*   Abilities that are used only on yourself have a special symbol near their name
-*   Entries where to use an ability have an importance distinction:
-    *   **!** - strong impact, a must-have pick in most cases
-    *   _no indication_ - moderate impact, taking and using this ability is recommended
-    *   ? - low impact, taking and using this ability for this alone is not worth it in most cases
+* Customisable Window with utility abilities for a dungeon
+* Clickable icons to show where to use that ability
+* Abilities that are used only on yourself have a special symbol near their name
+* Entries where to use an ability have an importance distinction:
+  * **!** - strong impact, a must-have pick in most cases
+  * _no indication_ - moderate impact, taking and using this ability is recommended
+  * ? - low impact, taking and using this ability for this alone is not worth it in most cases
+* Icon cosmetics like icon colour, text, and icon glow, based on the ability type:
+  * Known - Currently known abilities that will be useful for this dungeon.
+  * Known Not Important - Currently known abilities that will be useful for this dungeon and only contain dungeon entries that are marked with *?*. If disabled, "Known" settings will be used.
+  * Add - Currently not known abilities that will be useful in this dungeon.
+  * Add Not Important - Currently not known abilities that will be useful in this dungeon and only contain dungeon entries that are marked with *?*. If disabled, "Add" settings will be used.
+  * Remove - Talents that can be unlearned for this dungeon. Does not check if the talent is a prerequisite for another talent that is needed.
 
 ## Not included
 
-*   Racial abilities (might be added later)
-*   Magical debuffs on friendly players and abilities that remove them - they are a healer-specific mechanic with some exceptions
-*   Interrupt abilities and important casts that are interrupt-only - out of the scope for this project
-*   Shadowmeld, vanish, feign death and other abilities that are used to dodge a targeted ability (might be added later)
-*   Invisibility, shroud, etc. - they are route-specific
-*   Niche class-specific abilities like spell reflect - out of the scope for this project
+* Magical debuffs on friendly players and abilities that remove them - they are a healer-specific mechanic with some exceptions
+* Interrupt abilities and important casts that are interrupt-only - out of the scope for this project
+* Invisibility, shroud, etc. - they are route-specific
+* Niche class-specific abilities like Spell Reflection and AMS precast - out of the scope for this project
 
 ## To Do
 
-*   Profiles
-*   An option to disable specific spells from showing in the window
-*   An option to add custom abilities
-*   An option to add custom dungeon entries
+* An option to disable specific spells from showing in the window
+* An option to add custom abilities
+* An option to add custom dungeon entries
 
 ## Localisation
 
@@ -52,3 +55,6 @@ Found a bug or have a suggestion? Open an Issue on [GitHub](https://github.com/N
 ## Credits
 
 Thanks to Tactyks and his [M+ Ability Tracking Sheet](https://docs.google.com/spreadsheets/d/11pOj8w823fjBJqnOWTCA9vwL8_TVJF-kWFCK6WGJ7Jk) for information about dungeon abilities.
+
+Localisation:
+* German - Feedy88
