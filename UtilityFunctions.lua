@@ -32,6 +32,7 @@ MythicPlusUtility.supportedTags = {
     slow = true, -- Removable slow effect
     root = true, --  Removable root effect
     snare = true, -- Removable snare effect
+    snare_jet = true, -- Removable snare effect with Jet Sream (Shaman talent, special case)
     stealth = true, -- Removable stealth effect
     stun = true, -- Removable stun effect
     player_jump = true, -- Mechanic that can be prevented by player using "jump" ability
@@ -57,21 +58,28 @@ MythicPlusUtility.dungeonIdToName = {
 MythicPlusUtility.globals = {
     labelListOrder = {"default", "defaultText", "custom", "none"},
     unlearnAbility = {
-        labelList = {default = "\"-\"", defaultText = L["\"Remove\""], none = L["None"], custom = L["Custom"]},
+        labelList = {default = "\"-\"", defaultText = L["\"Remove\""], none = L["None"], custom = L["Custom_text"]},
     },
-    needAbility = {labelList = {default = "\"+\"", defaultText = L["\"Add\""], none = L["None"], custom = L["Custom"]}},
+    needAbility = {labelList = {default = "\"+\"", defaultText = L["\"Add\""], none = L["None"], custom = L["Custom_text"]}},
     onlyNotImportantAbility = {
-        labelList = {default = "\"?\"", defaultText = L["\"Optional\""], none = L["None"], custom = L["Custom"]},
+        labelList = {default = "\"?\"", defaultText = L["\"Optional\""], none = L["None"], custom = L["Custom_text"]},
     },
     needOnlyNotImportantAbility = {
-        labelList = {default = "\"+?\"", defaultText = L["\"Add Optional\""], none = L["None"], custom = L["Custom"]},
+        labelList = {default = "\"+?\"", defaultText = L["\"Add Optional\""], none = L["None"], custom = L["Custom_text"]},
     },
     learnedAbility = {
-        labelList = {default = "\"*\"", defaultText = L["\"Known\""], none = L["None"], custom = L["Custom"]},
+        labelList = {default = "\"*\"", defaultText = L["\"Known\""], none = L["None"], custom = L["Custom_text"]},
     },
     iconGlowTypeList = {pixel = L["Pixel Glow"], autocast = L["Autocast Shine"], action = L["Action Button Glow"]},
     iconGlowTypeListOrder = {"pixel", "autocast", "action"},
     maxValue = 2147483640, -- Little less than Integer Limit
+    iconTypeOrder = {
+        learnedAbility = 1,
+        onlyNotImportantAbility = 2,
+        needAbility = 3,
+        needOnlyNotImportantAbility = 4,
+        unlearnAbility = 5,
+    },
 }
 
 MythicPlusUtility.npcIdToEncounterSectionId = {[76227] = 33940}
@@ -354,6 +362,28 @@ function MythicPlusUtility:FormatSpellsData(spellId)
     end
 end
 
+function MythicPlusUtility:SortCurrentAbilitiesList()
+    local sortBy = MythicPlusUtility.db.profile.textAndIcon.icon.sortBy
+
+    if sortBy == "alpAsc" then
+        table.sort(self.currentAbilitiesList, function(a, b) return a.spellName < b.spellName end)
+    elseif sortBy == "alpDes" then
+        table.sort(self.currentAbilitiesList, function(a, b) return a.spellName > b.spellName end)
+    elseif sortBy == "typeAsc" then
+        table.sort(self.currentAbilitiesList, function(a, b)
+            local db = MythicPlusUtility.globals.iconTypeOrder
+            if db[a.buttonType] ~= db[b.buttonType] then return db[a.buttonType] < db[b.buttonType] end
+            return a.spellName < b.spellName
+        end)
+    elseif sortBy == "typeDes" then
+        table.sort(self.currentAbilitiesList, function(a, b)
+            local db = MythicPlusUtility.globals.iconTypeOrder
+            if db[a.buttonType] ~= db[b.buttonType] then return db[a.buttonType] > db[b.buttonType] end
+            return a.spellName < b.spellName
+        end)
+    end
+end
+
 function MythicPlusUtility:CreateCurrentAbilitiesList()
     -- ACTIVE_TALENT_GROUP_CHANGED
     local t = self:tablecopy(self.utilityAbilities[self.db.char.class])
@@ -394,8 +424,7 @@ function MythicPlusUtility:CreateCurrentAbilitiesList()
     self.currentAbilitiesList = {}
     for _, entry in pairs(t) do table.insert(self.currentAbilitiesList, self:tablecopy(entry)) end
 
-    table.sort(self.currentAbilitiesList, function(a, b) return a.spellName < b.spellName end)
-
+    self:SortCurrentAbilitiesList()
 end
 
 function MythicPlusUtility:UpdateCurrentAbilitiesList(petOnly)
@@ -487,7 +516,28 @@ function MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(instance
             end
         end
 
+        local buttonType
+        if #entry.list > 0 then
+            if entry.isKnown then
+                if entry.hasImportant or not self.db.profile.buttonCosmetic.onlyNotImportantAbility.enabled then
+                    buttonType = "learnedAbility"
+                else
+                    buttonType = "onlyNotImportantAbility"
+                end
+            else
+                if entry.hasImportant or not self.db.profile.buttonCosmetic.needOnlyNotImportantAbility.enabled then
+                    buttonType = "needAbility"
+                else
+                    buttonType = "needOnlyNotImportantAbility"
+                end
+            end
+        else
+            buttonType = "unlearnAbility"
+        end
+        entry.buttonType = buttonType
     end
+
+    self:SortCurrentAbilitiesList()
 
     for id, entry in ipairs(self.currentAbilitiesList) do
         if entry.list and #entry.list > 0 then table.insert(self.buttonsIndices, id) end

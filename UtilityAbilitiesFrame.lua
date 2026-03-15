@@ -66,17 +66,16 @@ local function GetbuttonsIndices()
 end
 
 local function ApplyGlowToFrame(frame, db, type)
-    local color = {db.iconGlowColor.r, db.iconGlowColor.g, db.iconGlowColor.b, db.iconGlowColor.a}
     if type == "pixel" then
-        LCG.PixelGlow_Start(frame, color, db.glowPixelN, db.glowPixelFrequency, db.glowPixelLength, db.glowPixelTh,
-                            db.glowPixelXOffset, db.glowPixelYOffset, db.glowPixelBorder)
+        LCG.PixelGlow_Start(frame, db.iconGlowColor, db.glowPixelN, db.glowPixelFrequency, db.glowPixelLength,
+                            db.glowPixelTh, db.glowPixelXOffset, db.glowPixelYOffset, db.glowPixelBorder)
         frame.Glow_Stop = LCG.PixelGlow_Stop
     elseif type == "autocast" then
-        LCG.AutoCastGlow_Start(frame, color, db.glowAutocastN, db.glowAutocastFrequency, db.glowAutocastScale,
-                               db.glowAutocastXOffset, db.glowAutocastYOffset)
+        LCG.AutoCastGlow_Start(frame, db.iconGlowColor, db.glowAutocastN, db.glowAutocastFrequency,
+                               db.glowAutocastScale, db.glowAutocastXOffset, db.glowAutocastYOffset)
         frame.Glow_Stop = LCG.AutoCastGlow_Stop
     elseif type == "action" then
-        LCG.ButtonGlow_Start(frame, color)
+        LCG.ButtonGlow_Start(frame, db.iconGlowColor)
         frame.Glow_Stop = LCG.ButtonGlow_Stop
     end
 end
@@ -94,6 +93,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     local profile = self.db.profile
     local buttonCosmetic = self.db.profile.buttonCosmetic
     local windowSettings = self.db.profile.windowSettings
+    local textAndIcon = self.db.profile.textAndIcon
 
     self:PopulateCurrentAbilitiesListWithInstanceData(profile.instanceID)
 
@@ -115,6 +115,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     leftLabelFrame:SetPoint("TOPRIGHT", frame, "TOPLEFT", LEFT_PADDING - 1, 0)
     leftLabelFrame:SetHeight(frame:GetHeight())
     leftLabelFrame:SetClipsChildren(true)
+    leftLabelFrame:SetFrameLevel(frame:GetFrameLevel() + 1)
     frame.leftLabelFrame = leftLabelFrame
 
     frame:SetMovable(true)
@@ -135,6 +136,21 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
         ACR:NotifyChange("MythicPlusUtility_Options")
     end)
+
+    function frame:ProfileChange()
+        db = MythicPlusUtility.db
+        profile = MythicPlusUtility.db.profile
+        buttonCosmetic = MythicPlusUtility.db.profile.buttonCosmetic
+        windowSettings = MythicPlusUtility.db.profile.windowSettings
+        textAndIcon = MythicPlusUtility.db.profile.textAndIcon
+
+        MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(profile.instanceID)
+        self:UpdateButtons()
+        self:UpdateIconSize(false)
+        self:UpdateText(false, false)
+        self:UpdateTextWrap(false)
+        self:UpdateLayout()
+    end
 
     function frame:ChangeInstance()
         MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(profile.instanceID)
@@ -159,6 +175,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
             end
         end
         self:SetShown(show)
+        self.leftLabelFrame:SetShown(show)
     end
 
     function frame:UpdatePosition()
@@ -168,30 +185,36 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     local background = frame:CreateTexture(nil, "ARTWORK")
     background:SetAllPoints()
 
-    background:SetColorTexture(profile.frameBackground.r, profile.frameBackground.g, profile.frameBackground.b,
-                               profile.frameBackground.a)
+    local c = profile.frameBackground
+    background:SetColorTexture(c[1], c[2], c[3], c[4])
     frame.background = background
     frame.buttons = {}
 
-    function frame:UpdateLayout()
-        local currentY = -TOP_PADDING - self:GetTop() + self.dungeonNameText:GetBottom()
-        self.listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING, currentY)
+    function frame:UpdateLeftLabelFrameWidth()
         buttonsIndices = GetbuttonsIndices()
-
         local width = 0
         for id, _ in ipairs(buttonsIndices) do
             if self.buttons[id].labelLeft:IsShown() and self.buttons[id].labelLeft:GetWrappedWidth() > width then
                 width = self.buttons[id].labelLeft:GetWrappedWidth()
             end
         end
+        width = width + 10
         leftLabelFrame:SetWidth(width)
+    end
+
+    function frame:UpdateLayout()
+        local currentY = -TOP_PADDING - self:GetTop() + self.dungeonNameText:GetBottom()
+        self.listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING, currentY)
+        buttonsIndices = GetbuttonsIndices()
+
+        self:UpdateLeftLabelFrameWidth()
 
         for id, _ in ipairs(buttonsIndices) do
             local button = self.buttons[id]
             button:ClearAllPoints()
             button:SetPoint("TOPLEFT", LEFT_PADDING, currentY)
 
-            currentY = currentY - profile.buttonSize - BUTTON_SPACING
+            currentY = currentY - textAndIcon.icon.size - BUTTON_SPACING
 
             if button.listFrame:IsShown() then
                 button.listFrame:ClearAllPoints()
@@ -212,12 +235,16 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
         if windowSettings.autoExpand then
             local bottom
-            if self.buttons[#buttonsIndices].listFrame:IsShown() then
-                bottom = self.buttons[#buttonsIndices].listFrame:GetBottom()
-            else
-                bottom = self.buttons[#buttonsIndices]:GetBottom()
+            local height = 0
+            if #buttonsIndices > 0 then
+                if self.buttons[#buttonsIndices].listFrame:IsShown() then
+                    bottom = self.buttons[#buttonsIndices].listFrame:GetBottom()
+                else
+                    bottom = self.buttons[#buttonsIndices]:GetBottom()
+                end
+                height = TOP_PADDING + self:GetTop() - bottom
             end
-            local height = TOP_PADDING + self:GetTop() - bottom
+
             if height < 150 then height = 150 end
             if windowSettings.maxHeightEnable and height > windowSettings.maxHeight then
                 height = windowSettings.maxHeight
@@ -239,6 +266,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
         end
         if #self.buttons > #buttonsIndices then
             for i = #buttonsIndices + 1, #self.buttons do
+                self.buttons[i].labelLeft:Hide()
                 self.buttons[i].listFrame:Hide()
                 self.buttons[i]:Hide()
             end
@@ -248,28 +276,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
             local currentAbility = MythicPlusUtility.currentAbilitiesList[abilityId]
             local spellId = currentAbility.spellId
             if currentAbility.altSpellId then spellId = currentAbility.altSpellId end
-
-            local buttonType
-            if #currentAbility.list > 0 then
-                if currentAbility.isKnown then
-                    if currentAbility.hasImportant or not buttonCosmetic.onlyNotImportantAbility.enabled then
-                        buttonType = "learnedAbility"
-                    else
-                        buttonType = "onlyNotImportantAbility"
-                    end
-                else
-                    if currentAbility.hasImportant or not buttonCosmetic.needOnlyNotImportantAbility.enabled then
-                        buttonType = "needAbility"
-                    else
-                        buttonType = "needOnlyNotImportantAbility"
-                    end
-                end
-            else
-                buttonType = "unlearnAbility"
-            end
-
-            local enabled = buttonCosmetic[buttonType].enabled
-            local cosmeticDB = buttonCosmetic[buttonType]
+            local enabled = buttonCosmetic[currentAbility.buttonType].enabled
+            local cosmeticDB = buttonCosmetic[currentAbility.buttonType]
 
             if self.buttons[id] then
                 local button = self.buttons[id]
@@ -277,7 +285,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
                 button.list = MythicPlusUtility:tablecopy(currentAbility.list)
                 button.hasImportant = currentAbility.hasImportant
-                button.buttonType = buttonType
+                button.buttonType = currentAbility.buttonType
 
                 button.texture:SetTexture(MythicPlusUtility:GetSpellIconById(spellId))
 
@@ -295,8 +303,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     button.texture:SetDesaturated(false)
                 end
                 if enabled and cosmeticDB.iconColor then
-                    local color = cosmeticDB.iconColor
-                    button.texture:SetVertexColor(color.r, color.g, color.b, color.a)
+                    c = cosmeticDB.iconColor
+                    button.texture:SetVertexColor(c[1], c[2], c[3], c[4])
                 else
                     button.texture:SetVertexColor(1, 1, 1, 1)
                 end
@@ -326,11 +334,10 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     button.labelLeft:SetText(cosmeticDB.label)
                 end
 
-                local color = cosmeticDB.labelColor
-                button.labelLeft:SetTextColor(color.r, color.g, color.b, color.a)
-
-                local sColor = cosmeticDB.labelShadowColor
-                button.labelLeft:SetShadowColor(sColor.r, sColor.g, sColor.b, sColor.a)
+                c = cosmeticDB.labelColor
+                button.labelLeft:SetTextColor(c[1], c[2], c[3], c[4])
+                c = cosmeticDB.labelShadowColor
+                button.labelLeft:SetShadowColor(c[1], c[2], c[3], c[4])
                 button.labelLeft:SetShadowOffset(cosmeticDB.labelShadowX, cosmeticDB.labelShadowY)
 
                 if #button.listFrame.lines > #button.list then
@@ -348,7 +355,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                         line:SetJustifyH("LEFT")
                         line:SetWordWrap(true)
                         line:SetWidth(windowSettings.width - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
-                        line:SetFont(profile.font, profile.textFontSize, nil)
+                        line:SetFont(LSM:Fetch("font", textAndIcon.bodyText.labelFont), textAndIcon.bodyText.labelSize,
+                                     nil)
                         line:SetText(text)
 
                         if listId == 1 then
@@ -364,11 +372,11 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
             else
                 local button = CreateFrame("Button", nil, self)
-                button:SetSize(profile.buttonSize, profile.buttonSize)
+                button:SetSize(textAndIcon.icon.size, textAndIcon.icon.size)
 
                 button.list = MythicPlusUtility:tablecopy(currentAbility.list)
                 button.hasImportant = currentAbility.hasImportant
-                button.buttonType = buttonType
+                button.buttonType = currentAbility.buttonType
 
                 local texture = button:CreateTexture(nil, "ARTWORK")
                 texture:SetAllPoints()
@@ -380,8 +388,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     texture:SetDesaturated(false)
                 end
                 if enabled and cosmeticDB.iconColor then
-                    local color = cosmeticDB.iconColor
-                    texture:SetVertexColor(color.r, color.g, color.b, color.a)
+                    c = cosmeticDB.iconColor
+                    texture:SetVertexColor(c[1], c[2], c[3], c[4])
                 end
 
                 if enabled and cosmeticDB.iconGlow then
@@ -394,8 +402,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 label:SetPoint("LEFT", button, "RIGHT", 10, 0)
                 label:SetJustifyH("LEFT")
                 label:SetWordWrap(true)
-                label:SetWidth(windowSettings.width - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 5)
-                label:SetFont(profile.font, profile.labelFontSize, nil)
+                label:SetWidth(windowSettings.width - LEFT_PADDING - textAndIcon.icon.size - RIGHT_PADDING - 5)
+                label:SetFont(LSM:Fetch("font", textAndIcon.icon.labelFont), textAndIcon.icon.labelSize, nil)
 
                 local name = currentAbility.spellName
                 if currentAbility.tagsTable.self_only then
@@ -426,11 +434,10 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     labelLeft:SetText(cosmeticDB.label)
                 end
 
-                local color = cosmeticDB.labelColor
-                labelLeft:SetTextColor(color.r, color.g, color.b, color.a)
-
-                local sColor = cosmeticDB.labelShadowColor
-                labelLeft:SetShadowColor(sColor.r, sColor.g, sColor.b, sColor.a)
+                c = cosmeticDB.labelColor
+                labelLeft:SetTextColor(c[1], c[2], c[3], c[4])
+                c = cosmeticDB.labelShadowColor
+                labelLeft:SetShadowColor(c[1], c[2], c[3], c[4])
                 labelLeft:SetShadowOffset(cosmeticDB.labelShadowX, cosmeticDB.labelShadowY)
                 button.labelLeft = labelLeft
 
@@ -454,7 +461,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     line:SetJustifyH("LEFT")
                     line:SetWordWrap(true)
                     line:SetWidth(windowSettings.width - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
-                    line:SetFont(profile.font, profile.textFontSize, nil)
+                    line:SetFont(LSM:Fetch("font", textAndIcon.bodyText.labelFont), textAndIcon.bodyText.labelSize, nil)
                     line:SetText(text)
 
                     if i == 1 then
@@ -480,7 +487,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
     function frame:updateButtonCosmeticIcon(buttonType)
         local cosmeticDB = buttonCosmetic[buttonType]
-        local color = buttonCosmetic[buttonType].iconColor
+        c = buttonCosmetic[buttonType].iconColor
         buttonsIndices = GetbuttonsIndices()
 
         for id, _ in ipairs(buttonsIndices) do
@@ -490,8 +497,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     button.texture:SetDesaturated(cosmeticDB.iconDesaturate)
                 end
                 local r, g, b, a = button.texture:GetVertexColor()
-                if r ~= color.r or g ~= color.g or b ~= color.b or a ~= color.a then
-                    button.texture:SetVertexColor(color.r, color.g, color.b, color.a)
+                if r ~= c[1] or g ~= c[2] or b ~= c[3] or a ~= c[4] then
+                    button.texture:SetVertexColor(c[1], c[2], c[3], c[4])
                 end
             end
         end
@@ -499,8 +506,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
 
     function frame:updateButtonCosmeticLabel(buttonType)
         local cosmeticDB = buttonCosmetic[buttonType]
-        local colorLabel = buttonCosmetic[buttonType].labelColor
-        local colorShadow = buttonCosmetic[buttonType].labelShadowColor
+        local cLabel = buttonCosmetic[buttonType].labelColor
+        local cShadow = buttonCosmetic[buttonType].labelShadowColor
         local fontFileDB = LSM:Fetch("font", cosmeticDB.labelFont)
         local flagsDB = ""
         if cosmeticDB.labelOutline ~= "NONE" then flagsDB = cosmeticDB.labelOutline end
@@ -519,8 +526,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 if button.labelLeft:GetText() ~= text then button.labelLeft:SetText(text) end
 
                 local r, g, b, a = button.labelLeft:GetTextColor()
-                if r ~= colorLabel.r or g ~= colorLabel.g or b ~= colorLabel.b or a ~= colorLabel.a then
-                    button.labelLeft:SetTextColor(colorLabel.r, colorLabel.g, colorLabel.b, colorLabel.a)
+                if r ~= cLabel[1] or g ~= cLabel[2] or b ~= cLabel[3] or a ~= cLabel[4] then
+                    button.labelLeft:SetTextColor(cLabel[1], cLabel[2], cLabel[3], cLabel[4])
                 end
 
                 local fontFile, height, flags = button.labelLeft:GetFont()
@@ -529,8 +536,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                 end
 
                 r, g, b, a = button.labelLeft:GetShadowColor()
-                if r ~= colorShadow.r or g ~= colorShadow.g or b ~= colorShadow.b or a ~= colorShadow.a then
-                    button.labelLeft:SetShadowColor(colorShadow.r, colorShadow.g, colorShadow.b, colorShadow.a)
+                if r ~= cShadow[1] or g ~= cShadow[2] or b ~= cShadow[3] or a ~= cShadow[4] then
+                    button.labelLeft:SetShadowColor(cShadow[1], cShadow[2], cShadow[3], cShadow[4])
                 end
 
                 local x, y = button.labelLeft:GetShadowOffset()
@@ -556,38 +563,112 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
         for id, _ in ipairs(buttonsIndices) do
             local button = self.buttons[id]
             if button.buttonType == buttonType then
-                if button.Glow_Stop then button.Glow_Stop() end
+                if button.Glow_Stop then button.Glow_Stop(button) end
                 if cosmeticDB.iconGlow then ApplyGlowToFrame(button, cosmeticDB, cosmeticDB.iconGlowType) end
             end
         end
     end
 
-    function frame:UpdateButtonSize(updateLayout)
+    function frame:UpdateIconSize(updateLayout)
         updateLayout = updateLayout or true
 
         if #self.buttons > 0 then
             for _, button in ipairs(self.buttons) do
-                button:SetSize(profile.buttonSize, profile.buttonSize)
-                button.label:SetWidth(windowSettings.width - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 5)
+                button:SetSize(textAndIcon.icon.size, textAndIcon.icon.size)
+                button.label:SetWidth(windowSettings.width - LEFT_PADDING - textAndIcon.icon.size - RIGHT_PADDING - 5)
             end
             if updateLayout then self:UpdateLayout() end
         end
     end
 
-    function frame:UpdateFont(updateLayout)
+    function frame:UpdateText(parent, updateLayout)
         updateLayout = updateLayout or true
+        if not parent then
+            self:UpdateText("icon", updateLayout)
+            self:UpdateText("dungeonName", updateLayout)
+            self:UpdateText("bodyText", updateLayout)
+        end
 
-        self.dungeonNameText:SetFont(profile.font, profile.dungeonNameSize, nil)
-        self.listEmptyText:SetFont(profile.font, profile.textFontSize, nil)
-        if #self.buttons > 0 then
+        if parent == "icon" and #self.buttons > 0 then
+            local iconDB = textAndIcon.icon
+            local cLabel = iconDB.labelColor
+            local cShadow = iconDB.labelShadowColor
+            local fontFileDB = LSM:Fetch("font", iconDB.labelFont)
+            local flagsDB = ""
+            if iconDB.labelOutline ~= "NONE" then flagsDB = iconDB.labelOutline end
+
             for _, button in ipairs(self.buttons) do
-                button.label:SetFont(profile.font, profile.labelFontSize, nil)
-                button.label:SetPoint("TOPLEFT", button, "RIGHT", 10, Round(profile.labelFontSize / 2))
-                for _, line in ipairs(button.listFrame.lines) do
-                    line:SetFont(profile.font, profile.textFontSize, nil)
+                local fontFile, height, flags = button.label:GetFont()
+                if fontFile ~= fontFileDB or height ~= iconDB.labelSize or flags ~= flagsDB then
+                    button.label:SetFont(fontFileDB, iconDB.labelSize, flagsDB)
+                end
+
+                local r, g, b, a = button.label:GetTextColor()
+                if r ~= cLabel[1] or g ~= cLabel[2] or b ~= cLabel[3] or a ~= cLabel[4] then
+                    button.label:SetTextColor(cLabel[1], cLabel[2], cLabel[3], cLabel[4])
+                end
+
+                r, g, b, a = button.label:GetShadowColor()
+                if r ~= cShadow[1] or g ~= cShadow[2] or b ~= cShadow[3] or a ~= cShadow[4] then
+                    button.label:SetShadowColor(cShadow[1], cShadow[2], cShadow[3], cShadow[4])
+                end
+
+                local x, y = button.label:GetShadowOffset()
+                if x ~= iconDB.labelShadowX or y ~= iconDB.labelShadowY then
+                    button.label:SetShadowOffset(iconDB.labelShadowX, iconDB.labelShadowY)
                 end
             end
         end
+
+        if parent == "dungeonName" then
+            local dungeonDB = textAndIcon.dungeonName
+            local cLabel = dungeonDB.labelColor
+            local cShadow = dungeonDB.labelShadowColor
+            local flagsDB = ""
+            if dungeonDB.labelOutline ~= "NONE" then flagsDB = dungeonDB.labelOutline end
+
+            self.dungeonNameText:SetFont(LSM:Fetch("font", dungeonDB.labelFont), dungeonDB.labelSize, flagsDB)
+            self.dungeonNameText:SetTextColor(cLabel[1], cLabel[2], cLabel[3], cLabel[4])
+            self.dungeonNameText:SetShadowColor(cShadow[1], cShadow[2], cShadow[3], cShadow[4])
+            self.dungeonNameText:SetShadowOffset(dungeonDB.labelShadowX, dungeonDB.labelShadowY)
+        end
+
+        if parent == "bodyText" then
+            local bodyDB = textAndIcon.bodyText
+            local cLabel = bodyDB.labelColor
+            local cShadow = bodyDB.labelShadowColor
+            local fontFileDB = LSM:Fetch("font", bodyDB.labelFont)
+            local flagsDB = ""
+            if bodyDB.labelOutline ~= "NONE" then flagsDB = bodyDB.labelOutline end
+
+            self.listEmptyText:SetFont(LSM:Fetch("font", fontFileDB), bodyDB.labelSize, flagsDB)
+            if #self.buttons > 0 then
+                for _, button in ipairs(self.buttons) do
+                    for _, line in ipairs(button.listFrame.lines) do
+                        local fontFile, height, flags = line:GetFont()
+                        if fontFile ~= fontFileDB or height ~= bodyDB.labelSize or flags ~= flagsDB then
+                            line:SetFont(fontFileDB, bodyDB.labelSize, flagsDB)
+                        end
+
+                        local r, g, b, a = line:GetTextColor()
+                        if r ~= cLabel[1] or g ~= cLabel[2] or b ~= cLabel[3] or a ~= cLabel[4] then
+                            line:SetTextColor(cLabel[1], cLabel[2], cLabel[3], cLabel[4])
+                        end
+
+                        r, g, b, a = line:GetShadowColor()
+                        if r ~= cShadow[1] or g ~= cShadow[2] or b ~= cShadow[3] or a ~= cShadow[4] then
+                            line:SetShadowColor(cShadow[1], cShadow[2], cShadow[3], cShadow[4])
+                        end
+
+                        local x, y = line:GetShadowOffset()
+                        if x ~= bodyDB.labelShadowX or y ~= bodyDB.labelShadowY then
+                            line:SetShadowOffset(bodyDB.labelShadowX, bodyDB.labelShadowY)
+                        end
+                    end
+                end
+            end
+        end
+
         if updateLayout then self:UpdateLayout() end
     end
 
@@ -599,7 +680,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
         self.listEmptyText:SetWidth(windowSettings.width - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
         for id, _ in ipairs(buttonsIndices) do
             local button = self.buttons[id]
-            button.label:SetWidth(windowSettings.width - LEFT_PADDING - profile.buttonSize - RIGHT_PADDING - 1)
+            button.label:SetWidth(windowSettings.width - LEFT_PADDING - textAndIcon.icon.size - RIGHT_PADDING - 1)
             for subId, _ in ipairs(button.list) do
                 button.listFrame.lines[subId]:SetWidth(windowSettings.width - LEFT_PADDING - RIGHT_PADDING
                                                          - TEXT_WRAP_PADDING)
@@ -630,7 +711,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     dungeonNameText:SetWordWrap(true)
     dungeonNameText:SetWidth(windowSettings.width - 2 * CLOSE_BUTTON_SIZE - TEXT_WRAP_PADDING)
     dungeonNameText:SetText(self.dungeonIdToName[profile.instanceID] or "")
-    dungeonNameText:SetFont(profile.font, profile.dungeonNameSize, "OUTLINE")
+    dungeonNameText:SetFont(LSM:Fetch("font", textAndIcon.dungeonName.labelFont), textAndIcon.dungeonName.labelSize,
+                            "OUTLINE")
     dungeonNameText:SetPoint("TOP", 0, -TOP_PADDING)
     frame.dungeonNameText = dungeonNameText
 
@@ -639,7 +721,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     listEmptyText:SetWordWrap(true)
     listEmptyText:SetWidth(windowSettings.width - LEFT_PADDING - RIGHT_PADDING - TEXT_WRAP_PADDING)
     listEmptyText:SetText(L["No utility abilities for this dungeon"])
-    listEmptyText:SetFont(profile.font, profile.textFontSize, nil)
+    listEmptyText:SetFont(LSM:Fetch("font", textAndIcon.bodyText.labelFont), textAndIcon.bodyText.labelSize, nil)
     listEmptyText:SetPoint("TOPLEFT", LEFT_PADDING + RIGHT_PADDING,
                            -TOP_PADDING - frame:GetTop() + frame.dungeonNameText:GetBottom())
     listEmptyText:Hide()

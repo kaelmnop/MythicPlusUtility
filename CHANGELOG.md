@@ -1,15 +1,21 @@
 ## 1.1.0
 # New Features
-* Racials support
-* Targeted Spell Avoid mechanic support
-* Added more customisation to Utility Window:
-    * Background color can be fully customised
-    * Show which non baseline abilities to unlearn for this dungeon (can be disabled)
-    * Options for display for abilities above
-    * More options for unlearned abilities
-    * More options for needed abilities
-    * More options for abilities that contain only not importnant entries
-    * More options for unlearned abilities that contain only not importnant entries
+## Customisation
+### Window Background
+Background color can be fully customised
+### Window Position and Size Settings
+Added option to automatically expand window height with an option to set maximum height
+### New: Text and Icon Settings
+Moved text size settings to the separate tab and added more text customisation. Icon settings also contains icon size and icon sort by settings.
+### New: Icon Cosmetics Settings
+Added icon cosmetics like icon color, text, and icon glow, based on the ability type:
+* Known - Currently known abilities that will be useful for this dungeon.
+* Known Not Important - Currently known abilities that will be useful for this dungeon and only contain dungeon entries that are marked with *?*. If disabled, "Known" settings will be used.
+* Add - Currently not known abilities that will be useful in this dungeon.
+* Add Not Important - Currently not known abilities that will be useful in this dungeon and only contain dungeon entries that are marked with *?*. If disabled, "Add" settings will be used.
+* Remove - Talents that can be unlearned for this dungeon. Does not check if the talent is a prerequisite for another talent that is needed.
+## Profiles
+Added profiles support with import and export.
 # New Spells
 * Feign Death (Hunter)
 * Shadowmeld (Night Elf)

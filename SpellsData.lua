@@ -299,15 +299,15 @@ MythicPlusUtility.utilityAbilities = {
     [261] = {}, -- Subtlety
     SHAMAN = {
         [192058] = {tags = "[creature_stun]", baseline = true}, -- Capacitor Totem
-        [192063] = {tags = "[self_only][player_jump]"}, -- Gust of Wind
+        [192063] = {tags = "[self_only][player_jump]", baseline = true}, -- Gust of Wind
         [2484] = {tags = "[creature_slow]", baseline = true}, -- Earthbind Totem
         [370] = {tags = "[purge]"}, -- Purge
         [378075] = {tags = "[self_only][snare]"}, -- Thunderous Paws
         [383013] = {tags = "[poison]"}, -- Poison Cleansing Totem
-        [462817] = {tags = "[snare]"}, -- Jet Stream for Wind Rush Totem
+        [462817] = {tags = "[snare_jet]"}, -- Jet Stream for Wind Rush Totem
         [51485] = {tags = "[creature_slow][creature_root]", override = 2484}, -- Earthgrab Totem
         [51514] = {tags = "[cc_humanoid][cc_beast]"}, -- Hex
-        [58875] = {tags = "[self_only][slow][snare][root]"}, -- Spirit Walk
+        [58875] = {tags = "[self_only][slow][snare][root]", baseline = true}, -- Spirit Walk
         [8143] = {tags = "[fear][charm][sleep]"}, -- Tremor Totem
     },
     [262] = {
