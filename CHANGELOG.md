@@ -1,3 +1,6 @@
+## 1.1.1
+# Fixes
+* Window position was not updating on profile change
 ## 1.1.0
 # New Features
 ## Customisation

@@ -144,6 +144,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
         windowSettings = MythicPlusUtility.db.profile.windowSettings
         textAndIcon = MythicPlusUtility.db.profile.textAndIcon
 
+        self:UpdatePosition()
         MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(profile.instanceID)
         self:UpdateButtons()
         self:UpdateIconSize(false)
