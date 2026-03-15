@@ -32,14 +32,18 @@ MythicPlusUtility.supportedTags = {
     slow = true, -- Removable slow effect
     root = true, --  Removable root effect
     snare = true, -- Removable snare effect
+    snare_jet = true, -- Removable snare effect with Jet Sream (Shaman talent, special case)
     stealth = true, -- Removable stealth effect
+    stun = true, -- Removable stun effect
     player_jump = true, -- Mechanic that can be prevented by player using "jump" ability
     player_movement_immune = true, -- Mechanic that can be prevented by player using immunity to forced movement
     self_only = true, -- Ability that only works on the player
     -- important = true, -- Sets entry as important
     -- super_important = true, -- Sets entry as super important
+    -- spell_reflect = true, -- Can be spell reflected
+    targeted_avoid = true, -- Targeted ability that can be avoided with FD, Shadowmeld, etc.
 }
-
+MythicPlusUtility.defaultDungeonId = 2526
 MythicPlusUtility.dungeonIdToName = {
     [2526] = L["Algeth\'ar Academy"],
     [2811] = L["Magisters\' Terrace"],
@@ -50,6 +54,35 @@ MythicPlusUtility.dungeonIdToName = {
     [1209] = L["Skyreach"],
     [2805] = L["Windrunner Spire"],
 }
+
+MythicPlusUtility.globals = {
+    labelListOrder = {"default", "defaultText", "custom", "none"},
+    unlearnAbility = {
+        labelList = {default = "\"-\"", defaultText = L["\"Remove\""], none = L["None"], custom = L["Custom_text"]},
+    },
+    needAbility = {labelList = {default = "\"+\"", defaultText = L["\"Add\""], none = L["None"], custom = L["Custom_text"]}},
+    onlyNotImportantAbility = {
+        labelList = {default = "\"?\"", defaultText = L["\"Optional\""], none = L["None"], custom = L["Custom_text"]},
+    },
+    needOnlyNotImportantAbility = {
+        labelList = {default = "\"+?\"", defaultText = L["\"Add Optional\""], none = L["None"], custom = L["Custom_text"]},
+    },
+    learnedAbility = {
+        labelList = {default = "\"*\"", defaultText = L["\"Known\""], none = L["None"], custom = L["Custom_text"]},
+    },
+    iconGlowTypeList = {pixel = L["Pixel Glow"], autocast = L["Autocast Shine"], action = L["Action Button Glow"]},
+    iconGlowTypeListOrder = {"pixel", "autocast", "action"},
+    maxValue = 2147483640, -- Little less than Integer Limit
+    iconTypeOrder = {
+        learnedAbility = 1,
+        onlyNotImportantAbility = 2,
+        needAbility = 3,
+        needOnlyNotImportantAbility = 4,
+        unlearnAbility = 5,
+    },
+}
+
+MythicPlusUtility.npcIdToEncounterSectionId = {[76227] = 33940}
 
 function MythicPlusUtility:IsSpellKnownHandler(spellId, isPet)
     isPet = isPet or false
@@ -101,7 +134,7 @@ end
 
 function MythicPlusUtility:GetSpellHyperlinkById(spellId)
     local db = self.db.locale
-    if db.spellIdToHyperlink[spellId] and not string.find(db.spellIdToHyperlink[spellId], ":0|h%[%]|h") then
+    if (db.spellIdToHyperlink[spellId]) and (not string.find(db.spellIdToHyperlink[spellId], ":0|h%[%]|h")) then
         return db.spellIdToHyperlink[spellId]
     else
         local spellName = self:GetSpellNameById(spellId)
@@ -119,6 +152,13 @@ function MythicPlusUtility:GetNpcNameById(npcId)
     local db = self.db.locale
     if db.npcIdToName[npcId] and db.npcIdToName[npcId] ~= "" then
         return db.npcIdToName[npcId]
+    elseif self.npcIdToEncounterSectionId[npcId] then
+        local name = ""
+        local info = C_EncounterJournal.GetSectionInfo(self.npcIdToEncounterSectionId[npcId])
+        if info and info.title then name = info.title end
+        db.npcIdToName[npcId] = name
+
+        return name
     else
         local guid = format("Creature-0-0-0-0-%s-0", npcId)
         local tooltipData = C_TooltipInfo.GetHyperlink(format("unit:%s", guid))
@@ -139,7 +179,7 @@ end
 
 function MythicPlusUtility:GetNpcHyperlinkById(npcId)
     local db = self.db.locale
-    if db.npcIdToHyperlink[npcId] and not string.find(db.npcIdToHyperlink[npcId], "|h%[%]|h|r") then
+    if (db.npcIdToHyperlink[npcId]) and (not string.find(db.npcIdToHyperlink[npcId], "|h%[%]|h|r")) then
         return db.npcIdToHyperlink[npcId]
     else
         local npcName = self:GetNpcNameById(npcId)
@@ -165,7 +205,7 @@ function MythicPlusUtility:ExtractSpellIdsFromInstanceData(instanceID)
             self:GetSpellNameById(spellId)
             self:GetSpellIconById(spellId)
             entry.spellIds[spellId] = true
-            i = n
+            i = j
         end
     end
 
@@ -188,7 +228,7 @@ function MythicPlusUtility:ExtractNpcIdsFromInstanceData(instanceID)
             local npcId = tonumber(string.sub(substring, string.find(substring, "%d+")))
             self:GetNpcNameById(npcId)
             entry.npcIds[npcId] = true
-            i = n
+            i = j
         end
     end
 
@@ -216,7 +256,7 @@ function MythicPlusUtility:ExtractTagsFromInstanceData(instanceID)
                 entry.tagsTable.important = true
             end
 
-            i = n
+            i = j
         end
     end
 
@@ -277,7 +317,7 @@ function MythicPlusUtility:FormatSpellsData(spellId)
 
             if self.supportedTags[tag] then entry.tagsTable[tag] = true end
 
-            i = n
+            i = j
         end
     end
 
@@ -289,6 +329,13 @@ function MythicPlusUtility:FormatSpellsData(spellId)
         end
         for specId, _ in pairs(self.classSpecialisations[self.db.char.class]) do
             for spellId, entry in pairs(self.utilityAbilities[specId]) do
+                extract(entry)
+                entry.spellId = spellId
+                entry.spellName = self:GetSpellNameById(spellId)
+            end
+        end
+        for spellId, entry in pairs(self.utilityAbilitiesRacials) do
+            if entry.isKnown then
                 extract(entry)
                 entry.spellId = spellId
                 entry.spellName = self:GetSpellNameById(spellId)
@@ -307,6 +354,33 @@ function MythicPlusUtility:FormatSpellsData(spellId)
                 self.utilityAbilities[specId][spellId].spellName = self:GetSpellNameById(spellId)
             end
         end
+        if self.utilityAbilitiesRacials[spellId] and self.utilityAbilitiesRacials[spellId].isKnown then
+            extract(self.utilityAbilitiesRacials[spellId])
+            self.utilityAbilitiesRacials[spellId].spellId = spellId
+            self.utilityAbilitiesRacials[spellId].spellName = self:GetSpellNameById(spellId)
+        end
+    end
+end
+
+function MythicPlusUtility:SortCurrentAbilitiesList()
+    local sortBy = MythicPlusUtility.db.profile.textAndIcon.icon.sortBy
+
+    if sortBy == "alpAsc" then
+        table.sort(self.currentAbilitiesList, function(a, b) return a.spellName < b.spellName end)
+    elseif sortBy == "alpDes" then
+        table.sort(self.currentAbilitiesList, function(a, b) return a.spellName > b.spellName end)
+    elseif sortBy == "typeAsc" then
+        table.sort(self.currentAbilitiesList, function(a, b)
+            local db = MythicPlusUtility.globals.iconTypeOrder
+            if db[a.buttonType] ~= db[b.buttonType] then return db[a.buttonType] < db[b.buttonType] end
+            return a.spellName < b.spellName
+        end)
+    elseif sortBy == "typeDes" then
+        table.sort(self.currentAbilitiesList, function(a, b)
+            local db = MythicPlusUtility.globals.iconTypeOrder
+            if db[a.buttonType] ~= db[b.buttonType] then return db[a.buttonType] > db[b.buttonType] end
+            return a.spellName < b.spellName
+        end)
     end
 end
 
@@ -343,11 +417,14 @@ function MythicPlusUtility:CreateCurrentAbilitiesList()
         if entry.override and entry.isKnown and t[entry.override] then t[entry.override].isOverriden = true end
     end
 
+    for spellId, entry in pairs(self.utilityAbilitiesRacials) do
+        if entry.isKnown then t[spellId] = self:tablecopy(entry) end
+    end
+
     self.currentAbilitiesList = {}
     for _, entry in pairs(t) do table.insert(self.currentAbilitiesList, self:tablecopy(entry)) end
 
-    table.sort(self.currentAbilitiesList, function(a, b) return a.spellName < b.spellName end)
-
+    self:SortCurrentAbilitiesList()
 end
 
 function MythicPlusUtility:UpdateCurrentAbilitiesList(petOnly)
@@ -356,7 +433,7 @@ function MythicPlusUtility:UpdateCurrentAbilitiesList(petOnly)
     petOnly = petOnly or false
 
     for _, entry in pairs(self.currentAbilitiesList) do
-        if not (petOnly and entry.pet) then
+        if not (petOnly and entry.pet) and (not entry.racial) then
 
             if not (entry.alternatives and #entry.alternatives > 0) then
                 entry.isKnown = MythicPlusUtility:IsSpellKnownHandler(entry.spellId, entry.pet)
@@ -388,7 +465,7 @@ function MythicPlusUtility:UpdateCurrentAbilitiesList(petOnly)
     end
 
     for _, entry in pairs(self.currentAbilitiesList) do
-        if not (petOnly and entry.pet) then
+        if not (petOnly and entry.pet) and (not entry.racial) then
             if entry.override and entry.isKnown and (self.utilityAbilities[self.db.char.class][entry.override]
               or self.utilityAbilities[self.db.char.currentSpec][entry.override]) then
                 for _, subEntry in pairs(self.currentAbilitiesList) do
@@ -406,13 +483,16 @@ end
 function MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(instanceID)
 
     self.buttonsIndices = {}
+    self.buttonsIndicesWithEmpty = {}
 
     for _, entry in ipairs(self.currentAbilitiesList) do
         entry.list = {}
 
         if not entry.isOverriden then
             if self.instancesData[instanceID] then
+                local hasImportant = false
                 for _, instanceEntry in ipairs(self.instancesData[instanceID]) do
+
                     if not (self.db.profile.hideNotImportant and not instanceEntry.tagsTable.important) then
                         local found = false
                         for tag, _ in pairs(instanceEntry.tagsTable) do
@@ -422,17 +502,50 @@ function MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(instance
                             end
                         end
 
-                        if found then table.insert(entry.list, instanceEntry.formattedText) end
+                        if found then
+                            if not hasImportant and instanceEntry.tagsTable.important then
+                                hasImportant = true
+                            end
+                            table.insert(entry.list, instanceEntry.formattedText)
+                        end
                     end
-
                 end
+
+                entry.hasImportant = hasImportant
+
             end
         end
 
+        local buttonType
+        if #entry.list > 0 then
+            if entry.isKnown then
+                if entry.hasImportant or not self.db.profile.buttonCosmetic.onlyNotImportantAbility.enabled then
+                    buttonType = "learnedAbility"
+                else
+                    buttonType = "onlyNotImportantAbility"
+                end
+            else
+                if entry.hasImportant or not self.db.profile.buttonCosmetic.needOnlyNotImportantAbility.enabled then
+                    buttonType = "needAbility"
+                else
+                    buttonType = "needOnlyNotImportantAbility"
+                end
+            end
+        else
+            buttonType = "unlearnAbility"
+        end
+        entry.buttonType = buttonType
     end
+
+    self:SortCurrentAbilitiesList()
 
     for id, entry in ipairs(self.currentAbilitiesList) do
         if entry.list and #entry.list > 0 then table.insert(self.buttonsIndices, id) end
+    end
+    for id, entry in ipairs(self.currentAbilitiesList) do
+        if (entry.list and #entry.list > 0) or (entry.isKnown and not (entry.baseline or entry.racial)) then
+            table.insert(self.buttonsIndicesWithEmpty, id)
+        end
     end
 
 end

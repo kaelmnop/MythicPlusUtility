@@ -1,0 +1,46 @@
+?[group] - Ability/effect applicable on group
+[self_only] - Ability that only works on the player
+[cc_aberration] - Aberration that needs a CC effect
+[cc_beast] - Beast that needs a CC effect
+[cc_critter] - Critter that needs a CC effect
+[cc_demon] - Demon that needs a CC effect
+[cc_dragonkin] - Dragonkin that needs a CC effect
+[cc_elemental] - Elemental that needs a CC effect
+[cc_giant] - Giant that needs a CC effect
+[cc_humanoid] - Humanoid that needs a CC effect
+[cc_mechanical] - Mechanical that needs a CC effect
+[cc_undead] - Undead that needs a CC effect
+[cc_other] - Uncategorised creature that needs a CC effect
+[creature_grip] - Creature that needs a forced movement effect
+[creature_root] - Creature that needs a root effect
+[creature_slow] - Creature that needs a slow effect
+[creature_stun] - Creature that needs a stun effect
+[creature_fear] - Creature that needs a fear effect
+[creature_incapacitate] - Creature that needs an incapacitation effect
+[creature_mortal_strike] - Creature that needs a mortal strike effect
+[bleed] - Removable bleed effect 
+[charm] - Removable charm effect
+[curse] - Removable curse effect
+[disease] - Removable disease effect
+[enrage] - Removable enrage effect
+[fear] - Removable  fear effect
+[incapacitate] - Removable incapacitate effect
+[poison] - Removable poison effect
+[purge] - Purgable magic effect
+[sleep] - Removable sleep effect
+[slow] - Removable slow effect
+[root]  - Removable root effect
+[snare] - Removable snare effect
+[stealth] - Removable stealth effect
+[player_jump] - Mechanic that can be prevented by player using "jump" ability
+[player_movement_immune] - Mechanic that can be prevented by player using immunity to forced movement
+[important] - Sets entry as important
+[super_important] - Sets entry as super important
+
+[spell_reflect] - Can be spell reflected
+[targeted_avoid] - Targeted ability that can be avoided with FD, Shadowmeld, etc.
+
+[magic_debuff] - Removable magical debuff, not simply type "magic"
+[physical_debuff] - Removable physical debuff
+
+[] = {tags = ""}, -- 

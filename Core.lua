@@ -1,33 +1,30 @@
-MythicPlusUtility = LibStub("AceAddon-3.0"):NewAddon("MythicPlusUtility", "AceEvent-3.0", "AceConsole-3.0")
+MythicPlusUtility = LibStub("AceAddon-3.0"):NewAddon("MythicPlusUtility", "AceEvent-3.0", "AceConsole-3.0",
+                                                     "AceSerializer-3.0")
 local AC = LibStub("AceConfig-3.0")
 local ACD = LibStub("AceConfigDialog-3.0")
+local L = LibStub("AceLocale-3.0"):GetLocale("MythicPlusUtility")
 
 function MythicPlusUtility:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("MythicPlusUtilityDB", self.defaults, true)
-
     AC:RegisterOptionsTable("MythicPlusUtility_Options", self.options)
+    self:MigrateOldSettings()
 
     self.optionsFrame = ACD:AddToBlizOptions("MythicPlusUtility_Options", "Mythic Plus Utility")
-    ACD:SetDefaultSize("MythicPlusUtility_Options", 650, 540)
+    -- ACD:SetDefaultSize("MythicPlusUtility_Options", 800, 630)
 
-    -- adds a child options table, in this case our profiles panel
-    local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
-    AC:RegisterOptionsTable("MythicPlusUtility_Profiles", profiles)
-    -- To add profiles later
-    -- ACD:AddToBlizOptions("MythicPlusUtility_Profiles", "Profiles", "Mythic Plus Utility")
+    self.profiles = self.Profiles:CreateOptions()
+    self.profilesFrame = ACD:AddToBlizOptions("MythicPlusUtility_Profiles", L["Profiles"], "Mythic Plus Utility")
+
+    self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig")
+    self.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
+    self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig")
 
     self:RegisterChatCommand("mpu", "SlashCommand")
-
     self:InitializeMinimapIcon()
-
     self:GetCharacterInfo()
-
     self:ExtractSpellsFromDB()
-
     self:CheckLocalisation()
-
     self:FormatInstanceData()
-
     self:FormatSpellsData()
 
     C_Timer.NewTimer(1, function()
@@ -39,8 +36,46 @@ function MythicPlusUtility:OnInitialize()
 
 end
 
+function MythicPlusUtility:MigrateOldSettings()
+    -- Will clean up / change in a few updates
+    local db = self.db.profile
+    if not db.AddonName then db.AddonName = "MythicPlusUtility" end
+
+    local function migrateFrameSetting(oldSetting, newSetting)
+        if db[oldSetting] then
+            db.windowSettings[newSetting] = db[oldSetting]
+            db[oldSetting] = nil
+        end
+    end
+    local migrateFrameSettingTable = {
+        {"frameWidth", "width"}, {"frameHeight", "height"}, {"frameXOffset", "xOffset"}, {"frameYOffset", "yOffset"},
+        {"selectFramePoint", "framePoint"},
+    }
+    for _, setting in pairs(migrateFrameSettingTable) do migrateFrameSetting(setting[1], setting[2]) end
+
+    if db.buttonSize then
+        db.textAndIcon.icon.size = db.buttonSize
+        db.buttonSize = nil
+    end
+    if db.labelFontSize then
+        db.textAndIcon.icon.labelSize = db.labelFontSize
+        db.textFontSize = nil
+    end
+    if db.textFontSize then
+        db.textAndIcon.bodyText.labelSize = db.textFontSize
+        db.textFontSize = nil
+    end
+    if db.dungeonNameSize then
+        db.textAndIcon.dungeonName.labelSize = db.dungeonNameSize
+        db.dungeonNameSize = nil
+    end
+
+    db.font = nil
+end
+
+function MythicPlusUtility:RefreshConfig() if self.Frame then self.Frame:ProfileChange() end end
+
 function MythicPlusUtility:OnEnable()
-    self.db.profile.font = GetLocale() == "ruRU" and "Fonts\\FRIZQT___CYR.TTf" or "Fonts\\FRIZQT__.TTf" -- temporary hotfix
     self:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
     self:RegisterEvent("TRAIT_CONFIG_UPDATED")
     self:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -129,6 +164,9 @@ function MythicPlusUtility:ExtractSpellsFromDB()
     for specId, _ in pairs(self.classSpecialisations[self.db.char.class]) do
         for spellId, entry in pairs(self.utilityAbilities[specId]) do extract(spellId, entry) end
     end
+    for spellId, entry in pairs(MythicPlusUtility.utilityAbilitiesRacials) do
+        if entry.isKnown then extract(spellId, entry) end
+    end
 end
 
 function MythicPlusUtility:PopulateLocalisation()
@@ -147,6 +185,9 @@ function MythicPlusUtility:GetCharacterInfo()
         MythicPlusUtility:ExtractSpellsFromDB()
     end)
 
+    for spellId, entry in pairs(MythicPlusUtility.utilityAbilitiesRacials) do
+        entry.isKnown = self:IsSpellKnownHandler(spellId)
+    end
 end
 
 function MythicPlusUtility:ToggleAbilitiesFrame()
@@ -159,22 +200,16 @@ function MythicPlusUtility:ToggleAbilitiesFrame()
     self.Frame:SetShownHandler(not self.Frame:IsVisible())
 end
 
-function MythicPlusUtility:OpenSettings(inCombat)
-    if not inCombat then
-        if ACD.OpenFrames["MythicPlusUtility_Options"] then
-            ACD:Close("MythicPlusUtility_Options")
-        else
-            ACD:Open("MythicPlusUtility_Options")
-        end
-    end
-end
+function MythicPlusUtility:OpenSettings(inCombat, frame) if not inCombat then Settings.OpenToCategory(frame.name) end end
 
 function MythicPlusUtility:SlashCommand(input, editbox)
     if input == "show" then
         self:ToggleAbilitiesFrame()
     elseif input == "minimap" then
         self:ToggleMinimapIcon()
+    elseif input == "profile" or input == "profiles" then
+        self:OpenSettings(UnitAffectingCombat("player"), self.profilesFrame)
     else
-        self:OpenSettings(UnitAffectingCombat("player"))
+        self:OpenSettings(UnitAffectingCombat("player"), self.optionsFrame)
     end
 end

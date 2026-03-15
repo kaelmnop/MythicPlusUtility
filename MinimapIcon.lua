@@ -10,7 +10,7 @@ local LDB = LibStub("LibDataBroker-1.1"):NewDataObject("MythicPlusUtility", {
         if buttonName == "LeftButton" then
             MythicPlusUtility:ToggleAbilitiesFrame()
         elseif buttonName == "RightButton" then
-            MythicPlusUtility:OpenSettings(UnitAffectingCombat("player"))
+            MythicPlusUtility:OpenSettings(UnitAffectingCombat("player"), MythicPlusUtility.optionsFrame)
         elseif buttonName == "MiddleButton" then
             MythicPlusUtility:ToggleMinimapIcon()
         end

@@ -32,5 +32,6 @@ jobs:
             Locales/ruRU.lua
             Locales/zhCN.lua
             Locales/zhTW.lua
+            Dev/**
         env:
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
