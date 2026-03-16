@@ -200,7 +200,10 @@ MythicPlusUtility.options = {
                     order = 2.4,
                     name = L["Lock Window"],
                     get = "GetValue",
-                    set = "SetValue",
+                    set = function(info, value)
+                        MythicPlusUtility.db.profile[info[#info]] = value
+                        if MythicPlusUtility.Frame then MythicPlusUtility.Frame:FrameLockUpdate() end
+                    end,
                 },
             },
         },

@@ -119,7 +119,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     frame.leftLabelFrame = leftLabelFrame
 
     frame:SetMovable(true)
-    frame:EnableMouse(true)
+    frame:EnableMouse(false)
     frame:RegisterForDrag("LeftButton")
 
     frame:SetScript("OnDragStart", function(self) if not profile.toggleFrameLock then self:StartMoving() end end)
@@ -144,6 +144,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
         windowSettings = MythicPlusUtility.db.profile.windowSettings
         textAndIcon = MythicPlusUtility.db.profile.textAndIcon
 
+        self:FrameLockUpdate()
         self:UpdatePosition()
         MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(profile.instanceID)
         self:UpdateButtons()
@@ -152,6 +153,8 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
         self:UpdateTextWrap(false)
         self:UpdateLayout()
     end
+
+    function frame:FrameLockUpdate() frame:EnableMouse(not profile.toggleFrameLock) end
 
     function frame:ChangeInstance()
         MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(profile.instanceID)
@@ -453,6 +456,10 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
                     GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
                     GameTooltip:SetHyperlink(link)
                     GameTooltip:Show()
+                end)
+                listFrame:SetScript("OnHyperlinkClick",
+                                    function(self, link, text, button)
+                    SetItemRef(link, text, button, self)
                 end)
                 listFrame:SetScript("OnHyperlinkLeave", function() GameTooltip:Hide() end)
                 button.listFrame = listFrame
