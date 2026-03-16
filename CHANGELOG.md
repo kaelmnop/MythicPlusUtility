@@ -1,6 +1,10 @@
+## 1.1.2
+# Miscellaneous
+* The window is now click-through when it is locked.
+* Added an ability to click on spell/npc links and send them to chat.
 ## 1.1.1
 # Fixes
-* Window position was not updating on profile change
+* Window position was not updating on profile change.
 ## 1.1.0
 # New Features
 ## Customisation
