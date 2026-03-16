@@ -118,8 +118,10 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     leftLabelFrame:SetFrameLevel(frame:GetFrameLevel() + 1)
     frame.leftLabelFrame = leftLabelFrame
 
+    function frame:FrameLockUpdate() frame:EnableMouse(not profile.toggleFrameLock) end
+
     frame:SetMovable(true)
-    frame:EnableMouse(false)
+    frame:FrameLockUpdate()
     frame:RegisterForDrag("LeftButton")
 
     frame:SetScript("OnDragStart", function(self) if not profile.toggleFrameLock then self:StartMoving() end end)
@@ -153,8 +155,6 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
         self:UpdateTextWrap(false)
         self:UpdateLayout()
     end
-
-    function frame:FrameLockUpdate() frame:EnableMouse(not profile.toggleFrameLock) end
 
     function frame:ChangeInstance()
         MythicPlusUtility:PopulateCurrentAbilitiesListWithInstanceData(profile.instanceID)
