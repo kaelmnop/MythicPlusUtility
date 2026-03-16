@@ -118,7 +118,7 @@ function MythicPlusUtility:UtilityAbilitiesFrame()
     leftLabelFrame:SetFrameLevel(frame:GetFrameLevel() + 1)
     frame.leftLabelFrame = leftLabelFrame
 
-    function frame:FrameLockUpdate() frame:EnableMouse(not profile.toggleFrameLock) end
+    function frame:FrameLockUpdate() self:EnableMouse(not profile.toggleFrameLock) end
 
     frame:SetMovable(true)
     frame:FrameLockUpdate()
